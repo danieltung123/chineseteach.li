@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古代色彩詞彙辨析 網頁</title>
+    <!-- 載入 Google Fonts 思源宋體與思源黑體 + 圓潤手繪風字型 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome 圖示支援 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* 森林手繪風自然調性配色 */
+            --bg-main: #f3f6ef;
+            --bg-card: #ffffff;
+            --bg-paper: #fcfdfa;
+            --bg-header: #2d5a3f;
+            
+            --forest-dark: #1b3e2b;
+            --forest-main: #2d5a3f;
+            --forest-light: #4b7c59;
+            --forest-soft: #e4ece4;
+            --wood-warm: #8c6d53;
+            --wood-light: #f5eedc;
+            
+            --border-handdrawn: #2d5a3f;
+            --text-dark: #1c2b22;
+            --text-muted: #576b60;
+            --text-light: #f7faf6;
+            
+            --font-title: "Noto Serif TC", "Songti TC", serif;
+            --font-body: "Noto Sans TC", "PingFang TC", sans-serif;
+            
+            --shadow-soft: 0 8px 24px rgba(45, 90, 63, 0.08);
+            --shadow-card: 0 4px 15px rgba(27, 62, 43, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            background-image: 
+                radial-gradient(rgba(75, 124, 89, 0.12) 1.5px, transparent 1.5px),
+                radial-gradient(rgba(140, 109, 83, 0.08) 1.5px, transparent 1.5px);
+            background-size: 32px 32px, 16px 16px;
+            color: var(--text-dark);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* 最頂部網站連結條 */
+        .top-website-bar {
+            background: #1b3e2b;
+            text-align: center;
+            padding: 8px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .top-website-link {
+            color: #dbe6d3;
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .top-website-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        /* 手繪風格簡約 Header */
+        header {
+            background: linear-gradient(135deg, #2d5a3f 0%, #1e3e2b 100%);
+            border-bottom: 4px solid #1b3e2b;
+            padding: 30px 20px 25px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(27, 62, 43, 0.15);
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1.main-title {
+            font-family: var(--font-title);
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Sticky Nav 導覽列 */
+        nav.sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(243, 246, 239, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid #d4dec9;
+            padding: 12px 0;
+        }
+
+        .nav-inner {
+            max-width: 1050px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 0 15px;
+        }
+
+        .nav-btn {
+            background: #ffffff;
+            border: 2px solid #c0d1b3;
+            color: var(--forest-dark);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-family: var(--font-title);
+            font-size: 0.98rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .nav-btn:hover {
+            color: var(--forest-main);
+            border-color: var(--forest-main);
+            background: #eef5e9;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--forest-main);
+            color: #ffffff;
+            border-color: var(--forest-dark);
+            box-shadow: 0 4px 12px rgba(45, 90, 63, 0.3);
+        }
+
+        /* 主內容容器 */
+        main.main-content {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 15px;
+        }
+
+        /* 區塊卡片風格 */
+        .content-section {
+            background: var(--bg-paper);
+            color: var(--text-dark);
+            border-radius: 20px;
+            padding: 35px 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid #d5e0ca;
+            position: relative;
+        }
+
+        .section-header {
+            border-bottom: 2px dashed #c4d4b7;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-num {
+            background: var(--forest-main);
+            color: white;
+            font-family: var(--font-title);
+            font-weight: 900;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 3px 8px rgba(45, 90, 63, 0.2);
+            border: 2px solid var(--forest-dark);
+        }
+
+        .section-title {
+            font-family: var(--font-title);
+            font-size: 1.55rem;
+            color: var(--forest-dark);
+            font-weight: 900;
+        }
+
+        /* 單元一：色彩分類頁籤 */
+        .color-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #d8e2cf;
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .color-tab-btn {
+            padding: 9px 20px;
+            border-radius: 12px 12px 0 0;
+            border: 2px solid #c5d4b8;
+            border-bottom: none;
+            background: #eaf0e4;
+            font-family: var(--font-title);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #3b5243;
+        }
+
+        .color-tab-btn:hover {
+            background: #dbe6d3;
+        }
+
+        .color-tab-btn.active {
+            background: var(--bg-paper);
+            border-color: var(--forest-main);
+            color: var(--forest-dark);
+            box-shadow: 0 -3px 8px rgba(0,0,0,0.05);
+        }
+
+        .color-tab-content {
+            display: none;
+        }
+
+        .color-tab-content.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片網格與放大的視覺色彩原點 */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .color-card {
+            background: #ffffff;
+            border: 2px solid #dbe5d2;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .color-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--forest-light);
+            box-shadow: 0 8px 24px rgba(45, 90, 63, 0.12);
+        }
+
+        .color-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1.5px dashed #e2ebd9;
+        }
+
+        .color-char-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .color-char {
+            font-family: var(--font-title);
+            font-size: 2.1rem;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .color-pinyin {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            margin-top: 4px;
+        }
+
+        /* 放大版視覺色彩原點 (56px x 56px) */
+        .color-swatch-badge {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.18), inset 0 2px 4px rgba(255,255,255,0.4);
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .color-card:hover .color-swatch-badge {
+            transform: scale(1.08);
+        }
+
+        .color-card-body {
+            font-size: 0.95rem;
+            color: #2c3e33;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .color-phrase {
+            background: #f4f8f1;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.92rem;
+            color: #1e2e24;
+            border-left: 4px solid var(--forest-main);
+        }
+
+        .highlight-char {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        /* 單元二：借代卡片 */
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 2px solid #c2d3b5;
+            border-radius: 25px;
+            padding: 6px 16px;
+            max-width: 380px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            padding: 6px 8px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .metaphor-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .metaphor-btn {
+            background: #eaf0e4;
+            border: 2px solid #c5d4b8;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-family: var(--font-title);
+            font-weight: 700;
+            color: var(--forest-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .metaphor-btn.active {
+            background: var(--forest-main);
+            color: white;
+            border-color: var(--forest-dark);
+        }
+
+        .metaphor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 20px;
+        }
+
+        .metaphor-card {
+            background: #ffffff;
+            border: 2px solid #dbe5d2;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.25s ease;
+        }
+
+        .metaphor-card:hover {
+            border-color: var(--forest-main);
+            box-shadow: 0 6px 18px rgba(45, 90, 63, 0.1);
+        }
+
+        .metaphor-title {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--forest-dark);
+            line-height: 1.35;
+            margin-bottom: 8px;
+        }
+
+        .metaphor-title i {
+            margin-right: 6px;
+        }
+
+        .metaphor-target {
+            display: inline-block;
+            background: #f0f7ec;
+            color: #2b5438;
+            border: 1px solid #b8d4ae;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .metaphor-desc {
+            font-size: 0.93rem;
+            color: #3b4d42;
+            line-height: 1.55;
+        }
+
+        /* 單元三：判讀解密與替換模擬器 */
+        .rules-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .rule-card {
+            background: #ffffff;
+            border: 2px dashed #b8cbb0;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .rule-card.rule-1 { border-color: #2d5a3f; background: #f5f9f3; }
+        .rule-card.rule-2 { border-color: #8c6d53; background: #fdfbf7; }
+
+        .rule-tag {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 6px;
+            font-family: var(--font-title);
+            font-weight: bold;
+            font-size: 0.88rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .rule-1 .rule-tag { background: #2d5a3f; }
+        .rule-2 .rule-tag { background: #8c6d53; }
+
+        .rule-card h3 {
+            font-family: var(--font-title);
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .rule-card p {
+            font-size: 0.93rem;
+            color: #4a5c51;
+        }
+
+        .simulator-box {
+            background: #ffffff;
+            border: 2px solid #d5e0ca;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .sim-title {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            color: var(--forest-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sim-select-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .sim-phrase-btn {
+            background: #eaf0e4;
+            border: 1.5px solid #c5d4b8;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.92rem;
+            transition: all 0.2s;
+            color: var(--forest-dark);
+            font-weight: 600;
+        }
+
+        .sim-phrase-btn:hover, .sim-phrase-btn.active {
+            background: var(--forest-main);
+            color: white;
+            border-color: var(--forest-dark);
+        }
+
+        .sim-display {
+            background: #f7faf5;
+            border: 2px solid #dbe5d2;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sim-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .sim-label {
+            font-weight: bold;
+            color: var(--text-muted);
+            width: 100px;
+            font-size: 0.88rem;
+        }
+
+        .sim-val {
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .sim-result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            font-weight: bold;
+        }
+
+        .sim-result-badge.real {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .sim-result-badge.virtual {
+            background: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffcc80;
+        }
+
+        /* 單元四：課堂測驗區 */
+        .question-card {
+            background: #ffffff;
+            border: 2px solid #dbe5d2;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .q-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .q-badge {
+            background: var(--forest-main);
+            color: white;
+            font-family: var(--font-title);
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .q-type-badge {
+            background: #8c6d53;
+            color: white;
+            font-size: 0.78rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .q-title {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--forest-dark);
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            background: #f9fbf8;
+            border: 1.5px solid #dbe5d2;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            font-size: 0.98rem;
+        }
+
+        .option-item:hover {
+            background: #eef5e9;
+            border-color: var(--forest-light);
+        }
+
+        .option-item.selected {
+            background: #e4ece4;
+            border-color: var(--forest-main);
+            font-weight: bold;
+        }
+
+        .opt-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #8ba092;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            background: white;
+        }
+
+        .option-item.selected .opt-checkbox {
+            background: var(--forest-main);
+            border-color: var(--forest-main);
+            color: white;
+        }
+
+        .q-explanation {
+            display: none;
+            background: #f4f8f1;
+            border: 1px solid #c5d4b8;
+            border-left: 4px solid var(--forest-main);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.93rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .q-explanation.show {
+            display: block;
+        }
+
+        .exp-ans {
+            font-weight: bold;
+            color: var(--forest-main);
+            margin-bottom: 6px;
+        }
+
+        .quiz-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn-action {
+            padding: 10px 28px;
+            border-radius: 25px;
+            font-family: var(--font-title);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .btn-submit {
+            background: var(--forest-main);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: var(--forest-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: #8c6d53;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #735740;
+            transform: translateY(-2px);
+        }
+
+        /* 測驗結果彈窗 */
+        .score-card-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(27, 62, 43, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .score-card-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .score-card {
+            background: #ffffff;
+            border: 3px solid var(--forest-main);
+            border-radius: 20px;
+            padding: 35px;
+            max-width: 460px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .score-title {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            color: var(--forest-dark);
+            margin-bottom: 10px;
+        }
+
+        .score-num {
+            font-size: 3.2rem;
+            font-family: var(--font-title);
+            font-weight: 900;
+            color: var(--forest-main);
+            margin: 10px 0;
+        }
+
+        .score-badge-text {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--forest-light);
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 20px;
+            color: #63776b;
+            font-size: 0.88rem;
+            border-top: 1px dashed #d5e0ca;
+            margin-top: 30px;
+        }
+
+        .footer-website-link {
+            color: var(--forest-dark);
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            transition: color 0.2s ease;
+        }
+
+        .q-actions-single {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .btn-submit-q {
+            background: var(--forest-main);
+            color: white;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 20px;
+            font-family: var(--font-title);
+            font-size: 0.93rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(45, 90, 63, 0.2);
+        }
+
+        .btn-submit-q:hover {
+            background: var(--forest-dark);
+            transform: translateY(-2px);
+        }
+
+        .q-result-banner {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .q-result-banner.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .q-result-banner.wrong {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .footer-website-link:hover {
+            color: var(--forest-light);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1.main-title { font-size: 1.7rem; }
+            .content-section { padding: 22px 18px; }
+            .color-grid { grid-template-columns: 1fr; }
+            .metaphor-grid { grid-template-columns: 1fr; }
+            .sim-row { flex-direction: column; align-items: flex-start; }
+            .sim-label { width: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 最頂部網站連結條 -->
+    <div class="top-website-bar">
+        <a href="https://danieltung123.github.io/chineseteach.li/李賦國文網頁.html" target="_blank" class="top-website-link">
+            <i class="fa-solid fa-house"></i> 前往【李賦國文教學網站】
+        </a>
+    </div>
+
+    <!-- 簡約 Header (標題更改為 古代色彩詞辨析 網頁) -->
+    <header id="top">
+        <div class="header-content">
+            <h1 class="main-title">古代色彩詞彙辨析 網頁</h1>
+        </div>
+    </header>
+
+    <!-- 導覽頁籤 Navbar (圖示更換為非葉子圖示) -->
+    <nav class="sticky-nav">
+        <div class="nav-inner">
+            <button class="nav-btn active" onclick="scrollToSection('unit1')"><i class="fa-solid fa-palette"></i> 單元一：經典色彩字詞大全</button>
+            <button class="nav-btn" onclick="scrollToSection('unit2')"><i class="fa-solid fa-masks-theater"></i> 單元二：色彩詞借代與延伸義</button>
+            <button class="nav-btn" onclick="scrollToSection('unit3')"><i class="fa-solid fa-compass"></i> 單元三：觀念判讀解密</button>
+            <button class="nav-btn" onclick="scrollToSection('unit4')"><i class="fa-solid fa-pen-nib"></i> 單元四：課堂綜合檢測</button>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="main-content">
+
+        <!-- ==================== 單元一 ==================== -->
+        <section id="unit1" class="content-section">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <div class="section-num">一</div>
+                    <div>
+                        <h2 class="section-title">經典色彩字詞大全（實指色彩彙整）</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 色彩類別分頁按鈕 -->
+            <div class="color-tabs">
+                <button class="color-tab-btn active" data-color="red" onclick="switchColorTab('red')">
+                    <i class="fa-solid fa-circle" style="color: #d32f2f;"></i> 紅色系
+                </button>
+                <button class="color-tab-btn" data-color="green" onclick="switchColorTab('green')">
+                    <i class="fa-solid fa-circle" style="color: #2e7d32;"></i> 綠／青色系
+                </button>
+                <button class="color-tab-btn" data-color="yellow" onclick="switchColorTab('yellow')">
+                    <i class="fa-solid fa-circle" style="color: #fbc02d;"></i> 黃色系
+                </button>
+                <button class="color-tab-btn" data-color="black" onclick="switchColorTab('black')">
+                    <i class="fa-solid fa-circle" style="color: #212121;"></i> 黑色系
+                </button>
+                <button class="color-tab-btn" data-color="white" onclick="switchColorTab('white')">
+                    <i class="fa-solid fa-circle" style="color: #9e9e9e;"></i> 白色系
+                </button>
+                <button class="color-tab-btn" data-color="purple" onclick="switchColorTab('purple')">
+                    <i class="fa-solid fa-circle" style="color: #7b1fa2;"></i> 紫色系
+                </button>
+            </div>
+
+            <!-- 紅色系 -->
+            <div id="color-tab-red" class="color-tab-content active">
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #d32f2f;">丹</div>
+                                <span class="color-pinyin">(ㄉㄢ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #d32f2f;"></div>
+                        </div>
+                        <div class="color-card-body">代表赤紅色。古人常用於形容紅葉、硃砂等。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char">丹</span>」楓：紅色的楓葉</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #e53935;">彤</div>
+                                <span class="color-pinyin">(ㄊㄨㄥˊ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #e53935;"></div>
+                        </div>
+                        <div class="color-card-body">形容朱紅色、大紅色，多指紅色的雲霞或彩繪。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char">彤</span>」雲：紅色的雲霞</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #c62828;">朱 / 硃</div>
+                                <span class="color-pinyin">(ㄓㄨ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #c62828;"></div>
+                        </div>
+                        <div class="color-card-body">正紅色。朱為大紅，硃多指鮮紅色的天然礦物。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char">朱</span>」曦：紅色的太陽</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #b71c1c;">赤</div>
+                                <span class="color-pinyin">(ㄔˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #b71c1c;"></div>
+                        </div>
+                        <div class="color-card-body">本義為火的顏色，即大紅色。</div>
+                        <div class="color-phrase">• 面紅耳「<span class="highlight-char">赤</span>」：赤色，即紅色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #8d6e63;">赭</div>
+                                <span class="color-pinyin">(ㄓㄜˇ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #8d6e63;"></div>
+                        </div>
+                        <div class="color-card-body">赤褐色、暗紅土色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char">赭</span>」紅：赤褐色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #d81b60;">緋</div>
+                                <span class="color-pinyin">(ㄈㄟ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #d81b60;"></div>
+                        </div>
+                        <div class="color-card-body">深紅色、桃紅色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char">緋</span>」紅：深紅色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #4a148c;">殷</div>
+                                <span class="color-pinyin">(ㄧㄢ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #5c0623;"></div>
+                        </div>
+                        <div class="color-card-body">暗紅色、濃血色（注意讀音為 ㄧㄢ）。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char">殷</span>」紅：暗紅色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #e57373;">酡</div>
+                                <span class="color-pinyin">(ㄊㄨㄛˊ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #e57373;"></div>
+                        </div>
+                        <div class="color-card-body">飲酒後臉面上泛起的紅暈。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char">酡</span>」顏：飲酒面紅貌</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 綠/青色系 -->
+            <div id="color-tab-green" class="color-tab-content">
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #00695c;">翠</div>
+                                <span class="color-pinyin">(ㄘㄨㄟˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #00897b;"></div>
+                        </div>
+                        <div class="color-card-body">翡翠綠、鮮艷碧綠色。</div>
+                        <div class="color-phrase">• 蒼松「<span class="highlight-char" style="color:#00695c;">翠</span>」柏：翠綠色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #00796b;">碧</div>
+                                <span class="color-pinyin">(ㄅㄧˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #00796b;"></div>
+                        </div>
+                        <div class="color-card-body">青綠色、清澈的翠綠色玉石。</div>
+                        <div class="color-phrase">• 水皆縹「<span class="highlight-char" style="color:#00796b;">碧</span>」：翠綠色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #0288d1;">縹</div>
+                                <span class="color-pinyin">(ㄆㄧㄠˇ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #4fc3f7;"></div>
+                        </div>
+                        <div class="color-card-body">淡青色、清淺藍綠色。</div>
+                        <div class="color-phrase">• 水皆「<span class="highlight-char" style="color:#0288d1;">縹</span>」碧：淡青色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #2e7d32;">蒼</div>
+                                <span class="color-pinyin">(ㄘㄤ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #2e7d32;"></div>
+                        </div>
+                        <div class="color-card-body">深青色、蒼翠山林綠色；亦可指灰色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#2e7d32;">蒼</span>」翠：深綠貌</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #0288d1;">滄 (蒼)</div>
+                                <span class="color-pinyin">(ㄘㄤ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #1565c0;"></div>
+                        </div>
+                        <div class="color-card-body">「滄」通「蒼」，代表青藍色大海。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#0288d1;">滄</span>」海一粟：青藍海色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #1a237e;">藍 / 靛</div>
+                                <span class="color-pinyin">(ㄌㄢˊ / ㄉㄧㄢˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #1a237e;"></div>
+                        </div>
+                        <div class="color-card-body">蓼藍染料萃取的深藍綠色。</div>
+                        <div class="color-phrase">• 青出於「<span class="highlight-char" style="color:#1a237e;">藍</span>」勝於藍：蓼藍草</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #37474f;">黛</div>
+                                <span class="color-pinyin">(ㄉㄞˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #263238;"></div>
+                        </div>
+                        <div class="color-card-body">古代女子畫眉用的深青黑色顏料。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#37474f;">黛</span>」青：深青黑色</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 黃色系 -->
+            <div id="color-tab-yellow" class="color-tab-content">
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #fbc02d;">黃</div>
+                                <span class="color-pinyin">(ㄏㄨㄤˊ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #fbc02d;"></div>
+                        </div>
+                        <div class="color-card-body">大地黃土色、正黃色、尊貴帝王色彩。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#d4a017;">黃</span>」髮垂髫：老人黃髮</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #f57f17;">金</div>
+                                <span class="color-pinyin">(ㄐㄧㄣ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #ffb300;"></div>
+                        </div>
+                        <div class="color-card-body">黃金、耀眼光澤的金黃色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#f57f17;">金</span>」輝：金黃色晨光</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #fbc02d;">鵝黃 / 鴨黃</div>
+                                <span class="color-pinyin">(ㄜˊ ㄏㄨㄤˊ / ㄧㄚ ㄏㄨㄤˊ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #fff176;"></div>
+                        </div>
+                        <div class="color-card-body">小鵝嫩羽般嬌嫩可愛的淡黃色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#d4a017;">鵝黃</span>」柳芽：嫩黃色</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 黑色系 -->
+            <div id="color-tab-black" class="color-tab-content">
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #212121;">皂</div>
+                                <span class="color-pinyin">(ㄗㄠˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #1a1a1a;"></div>
+                        </div>
+                        <div class="color-card-body">指黑色。古代公差穿黑色衣服稱「皂衣」。</div>
+                        <div class="color-phrase">• 青紅「<span class="highlight-char" style="color:#212121;">皂</span>」白：皂即黑色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #212121;">緇</div>
+                                <span class="color-pinyin">(ㄗ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #262626;"></div>
+                        </div>
+                        <div class="color-card-body">黑色。僧侶所穿的黑色衣服稱為「緇衣」。</div>
+                        <div class="color-phrase">• 涅而不「<span class="highlight-char" style="color:#212121;">緇</span>」：緇即黑色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #212121;">黝</div>
+                                <span class="color-pinyin">(ㄧㄡˇ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #2e3c42;"></div>
+                        </div>
+                        <div class="color-card-body">漆黑光亮貌。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#212121;">黝</span>」黑：漆黑貌</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #212121;">黔</div>
+                                <span class="color-pinyin">(ㄑㄧㄢˊ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #37474f;"></div>
+                        </div>
+                        <div class="color-card-body">黑色。秦代稱平民為黔首（黑髮人）。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#212121;">黔</span>」首：黔即黑色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #212121;">玄</div>
+                                <span class="color-pinyin">(ㄒㄩㄢ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #1e272e;"></div>
+                        </div>
+                        <div class="color-card-body">黑中帶微紅的深黑色，泛指深玄色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#212121;">玄</span>」色：黑中帶微紅</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #212121;">烏</div>
+                                <span class="color-pinyin">(ㄨ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #111111;"></div>
+                        </div>
+                        <div class="color-card-body">烏鴉之黑色，形容濃黑髮色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#212121;">烏</span>」黑：純黑色</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 白色系 -->
+            <div id="color-tab-white" class="color-tab-content">
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #616161;">素</div>
+                                <span class="color-pinyin">(ㄙㄨˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #f5f5f5; border: 2px solid #e0e0e0;"></div>
+                        </div>
+                        <div class="color-card-body">本色的生帛，引申為白色、質樸未雕飾。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#616161;">素</span>」帳：白色的帳幔</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #616161;">皓</div>
+                                <span class="color-pinyin">(ㄏㄠˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #ffffff; border: 2px solid #e0e0e0;"></div>
+                        </div>
+                        <div class="color-card-body">潔白明亮貌。</div>
+                        <div class="color-phrase">• 明眸「<span class="highlight-char" style="color:#616161;">皓</span>」齒：皓即潔白</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #616161;">皚</div>
+                                <span class="color-pinyin">(ㄞˊ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #e0f7fa; border: 2px solid #b2ebf2;"></div>
+                        </div>
+                        <div class="color-card-body">霜雪純潔雪白貌。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#616161;">皚皚</span>」白雪：潔白貌</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #616161;">皤</div>
+                                <span class="color-pinyin">(ㄆㄛˊ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #eeeeee; border: 2px solid #e0e0e0;"></div>
+                        </div>
+                        <div class="color-card-body">老人頭髮銀白貌（注意音 ㄆㄛˊ）。</div>
+                        <div class="color-phrase">• 白髮「<span class="highlight-char" style="color:#616161;">皤皤</span>」：頭髮斑白</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #616161;">縞</div>
+                                <span class="color-pinyin">(ㄍㄠˇ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #fafafa; border: 2px solid #e0e0e0;"></div>
+                        </div>
+                        <div class="color-card-body">未經染色的白色生帛。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#616161;">縞</span>」衣：白色的布衣</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #616161;">皎</div>
+                                <span class="color-pinyin">(ㄐㄧㄠˇ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #ffffff; border: 2px solid #e0e0e0;"></div>
+                        </div>
+                        <div class="color-card-body">潔白明亮貌。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#616161;">皎</span>」月：明白之月</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 紫色系 -->
+            <div id="color-tab-purple" class="color-tab-content">
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #7b1fa2;">紫</div>
+                                <span class="color-pinyin">(ㄗˇ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #7b1fa2;"></div>
+                        </div>
+                        <div class="color-card-body">藍紅相雜的紫色，尊貴祥瑞色彩。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#7b1fa2;">紫</span>」氣東來：祥瑞之紫色</div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-card-header">
+                            <div class="color-char-wrap">
+                                <div class="color-char" style="color: #4a148c;">紺</div>
+                                <span class="color-pinyin">(ㄍㄢˋ)</span>
+                            </div>
+                            <div class="color-swatch-badge" style="background-color: #4a148c;"></div>
+                        </div>
+                        <div class="color-card-body">紺青色、深青透紅之紫色。</div>
+                        <div class="color-phrase">• 「<span class="highlight-char" style="color:#4a148c;">紺</span>」宇：深紫藍色的寺廟</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 單元二 ==================== -->
+        <section id="unit2" class="content-section">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <div class="section-num">二</div>
+                    <div>
+                        <h2 class="section-title">常見「色彩詞」的借代與延伸義（非實指顏色）</h2>
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #78909c;"></i>
+                    <input type="text" id="metaphor-search" placeholder="搜尋借代詞（如：學生、平民...）" oninput="filterMetaphors()">
+                </div>
+            </div>
+
+            <div class="metaphor-nav">
+                <button class="metaphor-btn active" data-cat="all" onclick="filterCategory('all')">全部檢視</button>
+                <button class="metaphor-btn" data-cat="people" onclick="filterCategory('people')">👤 1. 借代人物與身份</button>
+                <button class="metaphor-btn" data-cat="concept" onclick="filterCategory('concept')">📜 2. 借代事物與文化概念</button>
+                <button class="metaphor-btn" data-cat="object" onclick="filterCategory('object')">🏺 3. 器物、經籍與自然象徵</button>
+            </div>
+
+            <div class="metaphor-grid" id="metaphor-grid">
+                <div class="metaphor-card" data-cat="people" data-keywords="青衿 學生 青領">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-user-graduate"></i> 青衿
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄑㄧㄥ ㄐㄧㄣ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 學生</span>
+                    <div class="metaphor-desc">古代學生穿著青色領子的衣服，故「青衿」成為學生的借代詞（如：「青青子衿，悠悠我心」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="people" data-keywords="白丁 平民 無功名 沒讀書">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-user"></i> 白丁
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄅㄞˊ ㄉㄧㄥ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 平民百姓 / 無功名者</span>
+                    <div class="metaphor-desc">古代平民無官爵者穿白衣，故借代為沒有功名或未讀書的百姓（如：「談笑有鴻儒，往來無白丁」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="people" data-keywords="黔首 平民 百姓 黑髮">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-users"></i> 黔首
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄑㄧㄢˊ ㄕㄡˇ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 平民百姓</span>
+                    <div class="metaphor-desc">黔即黑色。平民無官帽可戴，以黑髮示人，故秦代稱百姓為「黔首」。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="people" data-keywords="紅顏 美女 少年">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-person-dress"></i> 紅顏
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄏㄨㄥˊ ㄧㄢˊ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 美女 / 年輕少年</span>
+                    <div class="metaphor-desc">原指面色紅潤的容貌。常借代指美女（如「紅顏禍水」）；亦可指年輕氣盛的少年（如「紅顏棄軒冕」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="people" data-keywords="粉黛 美女 化妝">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-wand-magic"></i> 粉黛
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄈㄣˇ ㄉㄞˋ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 美女 / 後宮佳麗</span>
+                    <div class="metaphor-desc">原指婦女化妝用的白粉與黛青顏料，引申借代為女子或美女（如：「六宮粉黛無顏色」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="people" data-keywords="藍領 白領 勞工 中產階級">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-briefcase"></i> 藍領／白領
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄌㄢˊ ㄌㄧㄥˇ / ㄅㄞˊ ㄌㄧㄥˇ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 體力勞業者／薪水階層</span>
+                    <div class="metaphor-desc">現代用語借代。藍領借代體力勞動者（工作服多為藍色）；白領借代辦公室上班族與中產階級。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="concept" data-keywords="汗青 史冊 竹簡">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-book"></i> 汗青
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄏㄢˋ ㄑㄧㄥ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 史冊 / 歷史紀錄</span>
+                    <div class="metaphor-desc">古代以竹簡造書，先用火烤炙竹簡使其去濕「出汗」稱殺青，故「汗青」借代為史冊（如：「留取丹心照汗青」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="concept" data-keywords="留取丹心 忠貞 忠心">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-heart"></i> 丹心
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄉㄢ ㄒㄧㄣ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 忠貞不貳的心</span>
+                    <div class="metaphor-desc">「丹」為紅色，赤紅象徵赤誠坦蕩。故「丹心」專指忠貞、赤誠的心（如「留取丹心照汗青」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="concept" data-keywords="赤子之心 赤手空拳 真摯 憑藉">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-hand-fist"></i> 赤子 / 赤手
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄔˋ ㄗˇ / ㄔˋ ㄕㄡˇ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 純潔真摯 / 毫無憑藉</span>
+                    <div class="metaphor-desc">「赤子」指初生嬰兒，比喻純潔坦誠；「赤手」則指兩手空空、手無寸鐵（如「赤子之心」、「赤手空拳」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="concept" data-keywords="緋聞 感情 桃色傳聞">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-newspaper"></i> 緋聞
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄈㄟ ㄨㄣˊ)</div>
+                    </div>
+                    <span class="metaphor-target">引申 ➔ 男女感情牽絆 / 桃色傳聞</span>
+                    <div class="metaphor-desc">非指紅色的新聞！而是指男女之間的感情牽絆、桃色花邊新聞。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="concept" data-keywords="慘綠少年 才學優秀 風度翩翩 彷徨苦惱">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-user-astronaut"></i> 慘綠少年
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄘㄢˇ ㄌㄩˋ ㄕㄠˋ ㄋㄧㄢˊ)</div>
+                    </div>
+                    <span class="metaphor-target">引申 ➔ 風度翩翩的青年 / 彷徨苦惱的少年</span>
+                    <div class="metaphor-desc">「慘」通「黲」，本義指淺綠色的服飾。後亦用「慘綠少年」指風度翩翩、意氣風發的青年才俊，或用來指彷徨苦惱的少年。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="concept" data-keywords="銀色生涯 演藝 電影 職業">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-film"></i> 銀色生涯
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄧㄣˊ ㄙㄜˋ ㄕㄥ ㄧㄚˊ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 演藝 / 電影界職業</span>
+                    <div class="metaphor-desc">源於電影膠卷黑白螢光幕的銀光輝映，借代以拍電影或演藝為生的職業生涯。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="object" data-keywords="釉綠 陶瓷 油彩">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-jar"></i> 釉綠
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄧㄡˋ ㄌㄩˋ)</div>
+                    </div>
+                    <span class="metaphor-target">專指 ➔ 陶瓷表面的光亮油彩</span>
+                    <div class="metaphor-desc">指覆蓋在陶瓷表面，經高溫燒製而成的光亮顏色油彩。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="object" data-keywords="金匱 金屬書櫃 珍藏圖書">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-box-archive"></i> 金匱
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄐㄧㄣ ㄍㄨㄟˋ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 珍藏重要圖書的地方</span>
+                    <div class="metaphor-desc">金屬製的書櫃（「匱」同「櫃」，音 ㄍㄨㄟˋ），古代皇帝珍藏重要檔案或詔書秘籍的地方。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="object" data-keywords="閱金經 佛經 秘笈 漆金">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-scroll"></i> 金經
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄐㄧㄣ ㄐㄧㄥ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 珍本秘笈或佛經</span>
+                    <div class="metaphor-desc">指珍本秘笈或泥金寫就的佛經（佛像與佛經常用漆金裝飾，故稱金經；如「閱金經」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="object" data-keywords="調素琴 未雕飾 質樸">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-guitar"></i> 素琴
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄙㄨˋ ㄑㄧㄣˊ)</div>
+                    </div>
+                    <span class="metaphor-target">專指 ➔ 未加雕飾、無彩繪的琴</span>
+                    <div class="metaphor-desc">指未加雕飾、沒有彩繪塗漆的原木琴（素：本質、質樸不奢華；如「調素琴」）。</div>
+                </div>
+
+                <div class="metaphor-card" data-cat="object" data-keywords="金風送爽 秋風 五行">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-wind"></i> 金風
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄐㄧㄣ ㄈㄥ)</div>
+                    </div>
+                    <span class="metaphor-target">借代 ➔ 秋風</span>
+                    <div class="metaphor-desc">古代五行學說中，四季配五行（春木、夏火、秋金、冬水），故「金風」專指秋風（如「金風送爽」）。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 單元三 ==================== -->
+        <section id="unit3" class="content-section">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <div class="section-num">三</div>
+                    <div>
+                        <h2 class="section-title">觀念判讀解密</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rules-wrapper">
+                <div class="rule-card rule-1">
+                    <span class="rule-tag">黃金法則 1</span>
+                    <h3><i class="fa-solid fa-arrow-rotate-left"></i> 替換法（判斷視覺實指）</h3>
+                    <p>將代表色彩的字，替換成現代常用顏色詞（如「紅、綠、黑、白」）。放入句子中若<strong>文意通順，且符合作者描繪的實際視覺景貌</strong>，則屬於【實指顏色】。</p>
+                </div>
+
+                <div class="rule-card rule-2">
+                    <span class="rule-tag">黃金法則 2</span>
+                    <h3><i class="fa-solid fa-quote-left"></i> 語境法（判斷借代虛指）</h3>
+                    <p>若該詞已被固定為<strong>專有名詞、比喻抽象概念</strong>（如忠心、秋天、平民百姓、神馬名稱等），則屬於【虛指或借代】。</p>
+                </div>
+            </div>
+
+            <div class="simulator-box">
+                <div class="sim-title">
+                    <i class="fa-solid fa-flask" style="color: #2d5a3f;"></i> 例句
+                </div>
+                <div class="sim-select-group">
+                    <button class="sim-phrase-btn active" onclick="runSimulation(0)">「白」手起家</button>
+                    <button class="sim-phrase-btn" onclick="runSimulation(1)">「蒼」松翠柏</button>
+                    <button class="sim-phrase-btn" onclick="runSimulation(2)">「金」風送爽</button>
+                    <button class="sim-phrase-btn" onclick="runSimulation(3)">青紅「皂」白</button>
+                    <button class="sim-phrase-btn" onclick="runSimulation(4)">飛「黃」騰達</button>
+                </div>
+
+                <div class="sim-display">
+                    <div class="sim-row">
+                        <span class="sim-label">原句詞彙：</span>
+                        <span id="sim-target" class="sim-val">「白」手起家</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-label">現代顏色替換：</span>
+                        <span id="sim-replaced" style="color: #c62828; font-weight: bold;">「白色的手」建立家業</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-label">替換後流暢度：</span>
+                        <span id="sim-fluency" style="color: #576b60;">文意荒謬！並非指雙手的顏色。</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-label">判讀結果：</span>
+                        <div id="sim-badge" class="sim-result-badge virtual">
+                            <i class="fa-solid fa-circle-xmark"></i> 虛指（引申為徒手、一無所有）
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 單元四 ==================== -->
+        <section id="unit4" class="content-section">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <div class="section-num">四</div>
+                    <div>
+                        <h2 class="section-title">課堂綜合檢測</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-container" id="quiz-container">
+                <div class="question-card" id="q-card-1">
+                    <div class="q-header">
+                        <span class="q-badge">講義經典題</span>
+                        <span class="q-type-badge">多選題</span>
+                        <div class="q-title">1. 下列「」中的字義，何者「實指」顏色？（多選）</div>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item" onclick="toggleOption(1, 'A')">
+                            <div class="opt-checkbox" id="opt-1-A"><i class="fa-solid fa-check"></i></div>
+                            <div>(A)「白」手起家</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(1, 'B')">
+                            <div class="opt-checkbox" id="opt-1-B"><i class="fa-solid fa-check"></i></div>
+                            <div>(B)飛「黃」騰達</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(1, 'C')">
+                            <div class="opt-checkbox" id="opt-1-C"><i class="fa-solid fa-check"></i></div>
+                            <div>(C)「蒼」松翠柏</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(1, 'D')">
+                            <div class="opt-checkbox" id="opt-1-D"><i class="fa-solid fa-check"></i></div>
+                            <div>(D)「金」風送爽</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(1, 'E')">
+                            <div class="opt-checkbox" id="opt-1-E"><i class="fa-solid fa-check"></i></div>
+                            <div>(E)青紅「皂」白</div>
+                        </div>
+                    </div>
+                    <div class="q-actions-single">
+                        <button class="btn-submit-q" id="sub-btn-1" onclick="submitSingleQ(1)"><i class="fa-solid fa-paper-plane"></i> 送出作答與查看詳解</button>
+                    </div>
+                    <div class="q-explanation" id="exp-1">
+                        <div class="exp-ans">【正確答案】(C)、(E)</div>
+                        <div class="exp-detail">
+                            <strong>【逐項解析】</strong><br>
+                            • <strong>(A)「白」手起家：【非實指】</strong> 這裡的「白」是虛指，意思是「徒手、一無所有」，並非指白色的手。<br>
+                            • <strong>(B)飛「黃」騰達：【非實指】</strong> 「飛黃」是古代傳說中的神馬名稱（比喻仕途順遂），「黃」非單獨作為實指顏色。<br>
+                            • <strong>(C)「蒼」松翠柏：【實指】</strong> 「蒼」指深綠色，「翠」指翠綠色。形容松柏四季常青，確實描述視覺色彩。<br>
+                            • <strong>(D)「金」風送爽：【非實指】</strong> 五行學說中「秋季配金」，故「金風」借代指秋風，非指金黃色的風。<br>
+                            • <strong>(E)青紅「皂」白：【實指】</strong> 「皂」即為黑色。青、紅、皂（黑）、白皆為實際的顏色名稱。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card" id="q-card-2">
+                    <div class="q-header">
+                        <span class="q-badge">實力進階 2</span>
+                        <span class="q-type-badge">多選題</span>
+                        <div class="q-title">2. 下列文句中的色彩詞，何者屬於「借代人物或身份」？（多選）</div>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item" onclick="toggleOption(2, 'A')">
+                            <div class="opt-checkbox" id="opt-2-A"><i class="fa-solid fa-check"></i></div>
+                            <div>(A) 談笑有鴻儒，往來無「白丁」</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(2, 'B')">
+                            <div class="opt-checkbox" id="opt-2-B"><i class="fa-solid fa-check"></i></div>
+                            <div>(B) 秦始皇統一六國，將百姓改稱為「黔首」</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(2, 'C')">
+                            <div class="opt-checkbox" id="opt-2-C"><i class="fa-solid fa-check"></i></div>
+                            <div>(C) 人生自古誰無死，留取「丹」心照汗青</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(2, 'D')">
+                            <div class="opt-checkbox" id="opt-2-D"><i class="fa-solid fa-check"></i></div>
+                            <div>(D) 回眸一笑百媚生，六宮「粉黛」無顏色</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(2, 'E')">
+                            <div class="opt-checkbox" id="opt-2-E"><i class="fa-solid fa-check"></i></div>
+                            <div>(E) 「青青」子衿，悠悠我心</div>
+                        </div>
+                    </div>
+                    <div class="q-actions-single">
+                        <button class="btn-submit-q" id="sub-btn-2" onclick="submitSingleQ(2)"><i class="fa-solid fa-paper-plane"></i> 送出作答與查看詳解</button>
+                    </div>
+                    <div class="q-explanation" id="exp-2">
+                        <div class="exp-ans">【正確答案】(A)、(B)、(D)、(E)</div>
+                        <div class="exp-detail">
+                            <strong>【逐項解析】</strong><br>
+                            • <strong>(A) 白丁</strong>：借代平民百姓。<br>
+                            • <strong>(B) 黔首</strong>：借代平民百姓。<br>
+                            • <strong>(C) 丹心</strong>：借代忠貞不貳的心（屬文化概念，非人物身份）。<br>
+                            • <strong>(D) 粉黛</strong>：借代後宮美女。<br>
+                            • <strong>(E) 子衿(青衿)</strong>：借代學生。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card" id="q-card-3">
+                    <div class="q-header">
+                        <span class="q-badge">實力進階 3</span>
+                        <span class="q-type-badge">多選題</span>
+                        <div class="q-title">3. 下列各組「」中的字，何者字義相同且皆「實指顏色」？（多選）</div>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item" onclick="toggleOption(3, 'A')">
+                            <div class="opt-checkbox" id="opt-3-A"><i class="fa-solid fa-check"></i></div>
+                            <div>(A) 「縹」碧 / 水皆「縹」碧</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(3, 'B')">
+                            <div class="opt-checkbox" id="opt-3-B"><i class="fa-solid fa-check"></i></div>
+                            <div>(B) 「赤」手空拳 / 面紅耳「赤」</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(3, 'C')">
+                            <div class="opt-checkbox" id="opt-3-C"><i class="fa-solid fa-check"></i></div>
+                            <div>(C) 明眸「皓」齒 / 皓皓白雪</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(3, 'D')">
+                            <div class="opt-checkbox" id="opt-3-D"><i class="fa-solid fa-check"></i></div>
+                            <div>(D) 調「素」琴 / 「素」帳</div>
+                        </div>
+                    </div>
+                    <div class="q-actions-single">
+                        <button class="btn-submit-q" id="sub-btn-3" onclick="submitSingleQ(3)"><i class="fa-solid fa-paper-plane"></i> 送出作答與查看詳解</button>
+                    </div>
+                    <div class="q-explanation" id="exp-3">
+                        <div class="exp-ans">【正確答案】(A)、(C)</div>
+                        <div class="exp-detail">
+                            <strong>【逐項解析】</strong><br>
+                            • <strong>(A) 正確</strong>：皆為實指淡青色/翠綠色。<br>
+                            • <strong>(B) 錯誤</strong>：赤手空拳為虛指（空手）；面紅耳赤為實指（紅色）。<br>
+                            • <strong>(C) 正確</strong>：皆為實指潔白貌。<br>
+                            • <strong>(D) 錯誤</strong>：調素琴為虛指/專指質樸未雕飾；素帳為實指白色的帳幔。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card" id="q-card-4">
+                    <div class="q-header">
+                        <span class="q-badge">觀念考驗 4</span>
+                        <span class="q-type-badge">多選題</span>
+                        <div class="q-title">4. 下列詩詞或成語「」中的色彩詞，何者純屬「虛指或借代」，而非指實際色彩？（多選）</div>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item" onclick="toggleOption(4, 'A')">
+                            <div class="opt-checkbox" id="opt-4-A"><i class="fa-solid fa-check"></i></div>
+                            <div>(A) 人生自古誰無死，留取「丹」心照汗青</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(4, 'B')">
+                            <div class="opt-checkbox" id="opt-4-B"><i class="fa-solid fa-check"></i></div>
+                            <div>(B) 「金」風送爽，涼意漸濃</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(4, 'C')">
+                            <div class="opt-checkbox" id="opt-4-C"><i class="fa-solid fa-check"></i></div>
+                            <div>(C) 綠樹村邊合，「青」山郭外斜</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(4, 'D')">
+                            <div class="opt-checkbox" id="opt-4-D"><i class="fa-solid fa-check"></i></div>
+                            <div>(D) 朝如「青」絲暮成雪</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(4, 'E')">
+                            <div class="opt-checkbox" id="opt-4-E"><i class="fa-solid fa-check"></i></div>
+                            <div>(E) 面紅耳「赤」，羞愧不已</div>
+                        </div>
+                    </div>
+                    <div class="q-actions-single">
+                        <button class="btn-submit-q" id="sub-btn-4" onclick="submitSingleQ(4)"><i class="fa-solid fa-paper-plane"></i> 送出作答與查看詳解</button>
+                    </div>
+                    <div class="q-explanation" id="exp-4">
+                        <div class="exp-ans">【正確答案】(A)、(B)</div>
+                        <div class="exp-detail">
+                            <strong>【逐項解析】</strong><br>
+                            • <strong>(A) 正確【虛指借代】</strong>：「丹心」專指忠貞赤誠的心（赤色引申為赤誠），非指紅色的心臟。<br>
+                            • <strong>(B) 正確【虛指借代】</strong>：古代五行配四季「秋配金」，故「金風」借代為秋風，非金色之風。<br>
+                            • <strong>(C) 錯誤【實指色彩】</strong>：「青」山指綠色山峰，實指視覺風景。<br>
+                            • <strong>(D) 錯誤【實指色彩】</strong>：「青」絲指黑色的髮絲（青指黑色），描述視覺髮色。<br>
+                            • <strong>(E) 錯誤【實指色彩】</strong>：面紅耳「赤」指發紅的臉耳，屬視覺顏色描繪。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card" id="q-card-5">
+                    <div class="q-header">
+                        <span class="q-badge">文學素養 5</span>
+                        <span class="q-type-badge">多選題</span>
+                        <div class="q-title">5. 有關古代「色彩詞借代」的意涵配對，下列何者正確？（多選）</div>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item" onclick="toggleOption(5, 'A')">
+                            <div class="opt-checkbox" id="opt-5-A"><i class="fa-solid fa-check"></i></div>
+                            <div>(A) 司馬遷將歷史紀錄寫入「汗青」中 ➔ 借代為「史冊」</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(5, 'B')">
+                            <div class="opt-checkbox" id="opt-5-B"><i class="fa-solid fa-check"></i></div>
+                            <div>(B) 白居易《長恨歌》「六宮粉黛無顏色」 ➔ 借代為「後宮美貌女子」</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(5, 'C')">
+                            <div class="opt-checkbox" id="opt-5-C"><i class="fa-solid fa-check"></i></div>
+                            <div>(C) 劉禹錫《陋室銘》「談笑有鴻儒，往來無白丁」 ➔ 借代為「白髮蒼蒼的老人」</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(5, 'D')">
+                            <div class="opt-checkbox" id="opt-5-D"><i class="fa-solid fa-check"></i></div>
+                            <div>(D) 唐人稱許裴啟風采為「慘綠少年」 ➔ 借代為「風度翩翩、才貌出眾的青年才俊」</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(5, 'E')">
+                            <div class="opt-checkbox" id="opt-5-E"><i class="fa-solid fa-check"></i></div>
+                            <div>(E) 陶淵明《陋室銘》「調素琴，閱金經」 ➔ 借代為「白色的樂器」</div>
+                        </div>
+                    </div>
+                    <div class="q-actions-single">
+                        <button class="btn-submit-q" id="sub-btn-5" onclick="submitSingleQ(5)"><i class="fa-solid fa-paper-plane"></i> 送出作答與查看詳解</button>
+                    </div>
+                    <div class="q-explanation" id="exp-5">
+                        <div class="exp-ans">【正確答案】(A)、(B)、(D)</div>
+                        <div class="exp-detail">
+                            <strong>【逐項解析】</strong><br>
+                            • <strong>(A) 正確</strong>：「汗青」因殺青烤出水分而得名，借代為史冊。<br>
+                            • <strong>(B) 正確</strong>：「粉黛」為女子化妝品，借代後宮美女。<br>
+                            • <strong>(C) 錯誤</strong>：「白丁」借代平民百姓或沒有功名文墨的人，非指老人。<br>
+                            • <strong>(D) 正確</strong>：「慘綠少年」原指穿淺綠衣者，後引申為風度翩翩青年。<br>
+                            • <strong>(E) 錯誤</strong>：「素琴」指無彩繪裝飾的原木琴，素指質樸未雕飾，非指白色的樂器。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card" id="q-card-6">
+                    <div class="q-header">
+                        <span class="q-badge">詞義辨析 6</span>
+                        <span class="q-type-badge">多選題</span>
+                        <div class="q-title">6. 古代漢語中色彩詞訓詁豐富，下列各選項「」中色彩詞的解釋，何者正確？（多選）</div>
+                    </div>
+                    <div class="options-list">
+                        <div class="option-item" onclick="toggleOption(6, 'A')">
+                            <div class="opt-checkbox" id="opt-6-A"><i class="fa-solid fa-check"></i></div>
+                            <div>(A) 庭院深處「緋」紅的花朵 ➔ 指深紅色、桃紅色</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(6, 'B')">
+                            <div class="opt-checkbox" id="opt-6-B"><i class="fa-solid fa-check"></i></div>
+                            <div>(B) 溪水清澈「縹」碧 ➔ 指淡青色</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(6, 'C')">
+                            <div class="opt-checkbox" id="opt-6-C"><i class="fa-solid fa-check"></i></div>
+                            <div>(C) 滿頭白髮「皤」皤 ➔ 指鬚髮花白的樣子</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(6, 'D')">
+                            <div class="opt-checkbox" id="opt-6-D"><i class="fa-solid fa-check"></i></div>
+                            <div>(D) 飲酒後面泛「酡」顏 ➔ 指喝完酒後臉色發白</div>
+                        </div>
+                        <div class="option-item" onclick="toggleOption(6, 'E')">
+                            <div class="opt-checkbox" id="opt-6-E"><i class="fa-solid fa-check"></i></div>
+                            <div>(E) 穿著「縞」素禮服 ➔ 指黑色的禮服</div>
+                        </div>
+                    </div>
+                    <div class="q-actions-single">
+                        <button class="btn-submit-q" id="sub-btn-6" onclick="submitSingleQ(6)"><i class="fa-solid fa-paper-plane"></i> 送出作答與查看詳解</button>
+                    </div>
+                    <div class="q-explanation" id="exp-6">
+                        <div class="exp-ans">【正確答案】(A)、(B)、(C)</div>
+                        <div class="exp-detail">
+                            <strong>【逐項解析】</strong><br>
+                            • <strong>(A) 正確</strong>：「緋」指深紅色、桃紅色。<br>
+                            • <strong>(B) 正確</strong>：「縹」指淡青色、清淺藍綠色。<br>
+                            • <strong>(C) 正確</strong>：「皤皤」形容鬚髮花白。<br>
+                            • <strong>(D) 錯誤</strong>：「酡顏」指飲酒後臉面上泛起的紅暈，非發白。<br>
+                            • <strong>(E) 錯誤</strong>：「縞」指未染色的白色生絹、白色布帛，非黑色。
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn-action btn-submit" onclick="showFinalScore()"><i class="fa-solid fa-trophy"></i> 查看結算總分</button>
+                <button class="btn-action btn-reset" onclick="resetQuiz()"><i class="fa-solid fa-rotate-left"></i> 重置全卷練習</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 得分結算彈窗 -->
+    <div class="score-card-overlay" id="score-overlay">
+        <div class="score-card">
+            <h2 class="score-title"><i class="fa-solid fa-trophy"></i> 檢測結果結算</h2>
+            <p>古代色彩詞實虛判讀挑戰表現：</p>
+            <div class="score-num" id="score-display">100</div>
+            <div class="score-badge-text" id="score-badge">🏆 尊爵成就：古代色彩語感大師！</div>
+            <button class="btn-action btn-submit" onclick="closeScoreOverlay()">返回試題查看詳細解析</button>
+        </div>
+    </div>
+
+    <!-- 頁尾 Footer (最末加上 李賦國文教學網站 點擊連結) -->
+    <footer>
+        <p><a href="https://danieltung123.github.io/chineseteach.li/李賦國文網頁.html" target="_blank" class="footer-website-link"><i class="fa-solid fa-globe"></i> 李賦國文教學網站</a></p>
+        <p style="margin-top: 5px;">© 2026 Chineseteach.li All Rights Reserved.</p>
+    </footer>
+
+    <!-- JavaScript 腳本 -->
+    <script>
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                const navHeight = document.querySelector('.sticky-nav').offsetHeight;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = el.getBoundingClientRect().top;
+                const offsetPosition = elementRect - bodyRect - navHeight - 15;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                event.currentTarget.classList.add('active');
+            }
+        }
+
+        function switchColorTab(colorCategory) {
+            document.querySelectorAll('.color-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.color-tab-content').forEach(content => content.classList.remove('active'));
+
+            const targetBtn = document.querySelector(`.color-tab-btn[data-color="${colorCategory}"]`);
+            const targetContent = document.getElementById(`color-tab-${colorCategory}`);
+
+            if (targetBtn && targetContent) {
+                targetBtn.classList.add('active');
+                targetContent.classList.add('active');
+            }
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.metaphor-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.metaphor-btn[data-cat="${cat}"]`).classList.add('active');
+
+            const searchVal = document.getElementById('metaphor-search').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.metaphor-card');
+
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-cat');
+                const cardKeywords = card.getAttribute('data-keywords').toLowerCase();
+                const cardText = card.innerText.toLowerCase();
+
+                const catMatch = (cat === 'all' || cardCat === cat);
+                const searchMatch = (searchVal === '' || cardKeywords.includes(searchVal) || cardText.includes(searchVal));
+
+                if (catMatch && searchMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterMetaphors() {
+            const activeBtn = document.querySelector('.metaphor-btn.active');
+            const currentCat = activeBtn ? activeBtn.getAttribute('data-cat') : 'all';
+            filterCategory(currentCat);
+        }
+
+        const simData = [
+            {
+                phrase: '「白」手起家',
+                replaced: '「白色的手」建立家業',
+                fluency: '文意荒謬！並非指雙手的顏色。',
+                isReal: false,
+                resultText: '虛指（引申為徒手、一無所有）'
+            },
+            {
+                phrase: '「蒼」松翠柏',
+                replaced: '「深綠色」松樹與翠綠柏樹',
+                fluency: '文意十分通順，完美描繪松柏四季常青的視覺顏色。',
+                isReal: true,
+                resultText: '實指（描繪植物蒼翠深綠的色彩）'
+            },
+            {
+                phrase: '「金」風送爽',
+                replaced: '「金黃色」的风帶來涼爽',
+                fluency: '語意不合自然常理，風並非金色。古代五行「秋配金」。',
+                isReal: false,
+                resultText: '虛指（借代為秋風）'
+            },
+            {
+                phrase: '青紅「皂」白',
+                replaced: '青、紅、「黑色」、白',
+                fluency: '字面上確實列舉四種實際顏色名稱。',
+                isReal: true,
+                resultText: '實指（「皂」字字面上明確指代黑色）'
+            },
+            {
+                phrase: '飛「黃」騰達',
+                replaced: '飛翔的「黃色」',
+                fluency: '語意斷章取義！「飛黃」為古代傳說神馬名稱。',
+                isReal: false,
+                resultText: '虛指（專有名詞神馬，比喻仕途順遂）'
+            }
+        ];
+
+        function runSimulation(index) {
+            document.querySelectorAll('.sim-phrase-btn').forEach((btn, idx) => {
+                if (idx === index) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            const data = simData[index];
+            document.getElementById('sim-target').innerText = data.phrase;
+            document.getElementById('sim-replaced').innerText = data.replaced;
+            document.getElementById('sim-fluency').innerText = data.fluency;
+
+            const badge = document.getElementById('sim-badge');
+            if (data.isReal) {
+                badge.className = 'sim-result-badge real';
+                badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> 實指色彩：${data.resultText}`;
+            } else {
+                badge.className = 'sim-result-badge virtual';
+                badge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 虛指借代：${data.resultText}`;
+            }
+        }
+
+        const userAnswers = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
+        const correctAnswers = { 
+            1: ['C', 'E'], 
+            2: ['A', 'B', 'D', 'E'], 
+            3: ['A', 'C'],
+            4: ['A', 'B'],
+            5: ['A', 'B', 'D'],
+            6: ['A', 'B', 'C']
+        };
+        const submittedQuestions = {};
+
+        function toggleOption(qNum, optLetter) {
+            if (submittedQuestions[qNum] !== undefined) return;
+
+            const index = userAnswers[qNum].indexOf(optLetter);
+            const optElem = document.getElementById(`opt-${qNum}-${optLetter}`);
+            const parentElem = optElem.closest('.option-item');
+
+            if (index > -1) {
+                userAnswers[qNum].splice(index, 1);
+                parentElem.classList.remove('selected');
+            } else {
+                userAnswers[qNum].push(optLetter);
+                parentElem.classList.add('selected');
+            }
+        }
+
+        function submitSingleQ(qNum) {
+            if (userAnswers[qNum].length === 0) {
+                alert('請先選擇答案再送出作答喔！');
+                return;
+            }
+
+            const userAns = userAnswers[qNum].sort().join(',');
+            const correctAns = correctAnswers[qNum].sort().join(',');
+            const expBox = document.getElementById(`exp-${qNum}`);
+            
+            const isCorrect = (userAns === correctAns);
+            submittedQuestions[qNum] = isCorrect;
+
+            let statusBanner = expBox.querySelector('.q-result-banner');
+            if (!statusBanner) {
+                statusBanner = document.createElement('div');
+                statusBanner.className = 'q-result-banner';
+                expBox.insertBefore(statusBanner, expBox.firstChild);
+            }
+
+            if (isCorrect) {
+                statusBanner.className = 'q-result-banner correct';
+                statusBanner.innerHTML = '<i class="fa-solid fa-circle-check"></i> 作答正確！讚喔！';
+            } else {
+                statusBanner.className = 'q-result-banner wrong';
+                statusBanner.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 作答錯誤（您的答案：${userAns || '無'}），請對照下方正確解答與解析：`;
+            }
+
+            expBox.classList.add('show');
+
+            const btn = document.getElementById(`sub-btn-${qNum}`);
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-check-double"></i> 已查看詳解';
+                btn.disabled = true;
+                btn.style.opacity = '0.75';
+                btn.style.cursor = 'default';
+            }
+
+            if (Object.keys(submittedQuestions).length === 6) {
+                setTimeout(showFinalScore, 600);
+            }
+        }
+
+        function showFinalScore() {
+            let correctCount = 0;
+            for (let i = 1; i <= 6; i++) {
+                if (submittedQuestions[i]) correctCount++;
+            }
+
+            const score = Math.round((correctCount / 6) * 100);
+            document.getElementById('score-display').innerText = score + '分';
+
+            const badgeText = document.getElementById('score-badge');
+            if (score === 100) {
+                badgeText.innerText = '🏆 尊爵成就：古代色彩語感大師！';
+            } else if (score >= 60) {
+                badgeText.innerText = '🌟 優秀表現：國文彩墨學習新星！';
+            } else {
+                badgeText.innerText = '💪 繼續加油：仔細對照解析加強復習！';
+            }
+
+            document.getElementById('score-overlay').classList.add('active');
+        }
+
+        function resetQuiz() {
+            for (let i = 1; i <= 6; i++) {
+                userAnswers[i] = [];
+                delete submittedQuestions[i];
+                const expBox = document.getElementById(`exp-${i}`);
+                expBox.classList.remove('show');
+
+                const btn = document.getElementById(`sub-btn-${i}`);
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 送出作答與查看詳解';
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                }
+            }
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+        }
+
+        function closeScoreOverlay() {
+            document.getElementById('score-overlay').classList.remove('active');
+            scrollToSection('quiz-container');
+        }
+    </script>
+</body>
+</html>

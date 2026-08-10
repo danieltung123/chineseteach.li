@@ -796,6 +796,13 @@
         <div class="scroll-rod-left"></div>
         <div class="scroll-rod-right"></div>
         <div class="scroll-border">
+            <!-- 頂部頁面導覽 -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                <a href="李賦國文網頁.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(30, 41, 59, 0.08); color: var(--ink-black); text-decoration: none; border-radius: 20px; font-size: 0.9rem; font-weight: 700; border: 1px solid var(--ink-gray); transition: all 0.3s ease;">
+                    🎓 回李賦國文首頁
+                </a>
+            </div>
+
             <!-- 標頭 -->
             <header>
                 <h1>時光歲月之卷</h1>
@@ -850,11 +857,11 @@
             <div class="quiz-section" id="quiz-section">
                 <!-- 準備開始畫面 -->
                 <div class="quiz-intro" id="quiz-intro">
-                    <p>歡迎來到「古代考功測驗」！我們準備了 8 道隨機修辭與代稱題目，來檢驗你的年齡代稱功力。</p>
+                    <p>歡迎來到「古代考功測驗」！我們準備了 12 道精選修辭與代稱題目，完整涵蓋所有年齡階段，來檢驗你的年齡代稱功力。</p>
                     <p>在測驗中，你會需要根據<strong>情境故事描述</strong>或<strong>字面意思</strong>，找出對應的年齡代稱或年齡。</p>
                     <div style="margin: 20px auto; max-width: 300px; text-align: left;">
                         <label for="player-name-input" style="display: block; font-weight: 700; margin-bottom: 8px; color: var(--ink-black);">請輸入你的名字：</label>
-                        <input type="text" id="player-name-input" placeholder="例如：小明" style="width: 100%; padding: 10px 15px; border: 2px solid var(--ink-black); border-radius: 8px; font-size: 1rem; font-family: inherit; outline: none; background: #fffdf9;" />
+                        <input type="text" id="player-name-input" placeholder="例如：小明" autocomplete="off" spellcheck="false" style="width: 100%; padding: 10px 15px; border: 2px solid var(--ink-black); border-radius: 8px; font-size: 1rem; font-family: inherit; outline: none; background: #fffdf9;" />
                     </div>
                     <button class="btn-magic" onclick="startQuiz()" style="margin-top: 15px;">開啟考功測驗 ⚔️</button>
                 </div>
@@ -862,7 +869,7 @@
                 <!-- 答題進行畫面 -->
                 <div class="quiz-play-box" id="quiz-play-box">
                     <div class="quiz-header">
-                        <div class="quiz-progress" id="quiz-progress-text">進度：第 1 / 8 題</div>
+                        <div class="quiz-progress" id="quiz-progress-text">進度：第 1 / 12 題</div>
                         <div class="quiz-score" id="quiz-score-text">得分：0</div>
                     </div>
 
@@ -1163,8 +1170,43 @@
         let currentQuizIndex = 0;
         let quizScore = 0;
 
-                let currentPlayerName = "無名英雄";
+        let currentPlayerName = "無名英雄";
         let currentRunId = null;
+
+        // 人名資料庫（根據年齡階層與特別年齡的性別規範精選）
+        const namePoolByStage = {
+            "周晬": ["小寶", "娃娃", "圓圓", "萌萌", "阿寶", "嘟嘟", "果果", "糯糯"],
+            "襁褓": ["嬰兒", "小貝", "幼幼", "洋洋", "安安", "樂樂"],
+            "黃口": ["小淘氣", "小虎", "妞妞", "小山", "小熊", "阿橘"],
+            "垂髫": ["小童", "小風", "小雲", "小花", "阿喜", "小草"],
+            "總角": ["小傑", "小龍", "小雅", "小晴", "阿志", "阿軒", "采兒"],
+            "豆蔻": ["芷晴", "紫嫣", "采薇", "若涵", "宛蓉", "韶涵", "秀兒"], // 女 13-14 歲
+            "及笄": ["沛玲", "淑嫻", "宛如", "巧珍", "婷婷", "靜宜", "雪梅"], // 女 15 歲
+            "志學": ["子軒", "浩然", "冠宇", "文彬", "俊傑", "哲緯", "天佑"], // 男 15 歲
+            "弱冠": ["彥廷", "承翰", "宇翔", "家豪", "致遠", "秉儒", "偉誠"], // 男 20 歲
+            "花信": ["詠晴", "佩珊", "佳穎", "美玲", "雅婷", "慧如", "奕欣"], // 女 24 歲
+            "而立": ["建國", "志強", "宗翰", "伯承", "明輝", "秀琴", "秋月", "惠玲"], // 30 歲
+            "不惑": ["國華", "德明", "文龍", "光雄", "寶珠", "麗華", "鳳英", "美玉"], // 40 歲
+            "知命": ["義雄", "清山", "福來", "水木", "秀英", "金枝", "桂香", "月娥"], // 50 歲
+            "花甲": ["陳伯伯", "張阿公", "老周", "黃老哥", "張大媽", "王阿姨", "蔡婆婆"], // 60 歲
+            "耳順": ["林老哥", "老李", "趙老伯", "孫嬸嬸", "劉阿姨", "廖大娘"], // 60 歲
+            "古稀": ["許老伯", "趙爺爺", "林老先生", "劉老太太", "鄭阿嬤", "謝老夫人"], // 70 歲
+            "耄耋": ["孫老太爺", "宋老翁", "錢老丈", "周老夫人", "郭太夫人", "沈阿嬤"], // 70-90 歲
+            "期頤": ["彭高壽翁", "老太公", "百歲阿嬤", "莊老太夫人", "壽星爺爺"] // 100 歲
+        };
+
+        function getAppropriateName(stageName, usedSet) {
+            const pool = namePoolByStage[stageName] || ["隱士", "高人", "客官", "秀才"];
+            const unused = pool.filter(n => !usedSet.has(n));
+            let chosen = "";
+            if (unused.length > 0) {
+                chosen = unused[Math.floor(Math.random() * unused.length)];
+            } else {
+                chosen = pool[Math.floor(Math.random() * pool.length)] + (usedSet.size + 1);
+            }
+            usedSet.add(chosen);
+            return chosen;
+        }
 
         function generateQuizQuestions() {
             const ageRanges = {
@@ -1187,6 +1229,7 @@
                 "期頤": [100, 100]
             };
 
+            const usedNamesThisQuiz = new Set();
             const basicPool = [];
             const scenarioPool = [];
             const mathPool = [];
@@ -1199,11 +1242,9 @@
 
             // 1. 基礎題：給代稱選歲數 & 給歲數選代稱
             ageData.forEach(data => {
-                // 判斷當前是單一整數還是範圍/文字
                 const isExact = !data.age.includes("-") && data.age !== "幼兒";
 
                 // 1-1. 給代稱選歲數
-                // 誘導選項必須與答案同類型（整數 vs 範圍/文字）
                 const ageDistractors = ageData
                     .filter(d => d.age !== data.age)
                     .filter(d => {
@@ -1244,14 +1285,14 @@
                 });
             });
 
-            // 2. 情境題：年齡大小比較題 (生成 20 題備用)
+            // 2. 情境題：年齡大小比較題 (生成 20 題備用，人名符合年齡與性別且不重複)
             const ageValues = {
                 "周晬": 1, "襁褓": 1, "黃口": 6, "垂髫": 5, "總角": 11,
                 "豆蔻": 13, "及笄": 15, "志學": 15, "弱冠": 20, "花信": 24,
                 "而立": 30, "不惑": 40, "知命": 50, "花甲": 60, "耳順": 60,
                 "古稀": 70, "耄耋": 80, "期頤": 100
             };
-            const namesList = ["大民", "小草", "阿華", "小明", "志強", "雅婷", "美玲", "冠宇", "建國", "淑芬"];
+
             for (let i = 0; i < 20; i++) {
                 const shuffledStages = Object.keys(ageValues).sort(() => 0.5 - Math.random());
                 const stage1 = shuffledStages[0];
@@ -1262,16 +1303,15 @@
                 const v2 = ageValues[stage2];
                 const v3 = ageValues[stage3];
 
-                // 確保三個值不相同
                 if (v1 === v2 || v2 === v3 || v1 === v3) {
                     i--;
                     continue;
                 }
 
-                const shuffledNames = [...namesList].sort(() => 0.5 - Math.random());
-                const name1 = shuffledNames[0];
-                const name2 = shuffledNames[1];
-                const name3 = shuffledNames[2];
+                // 根據個別階段性別與年齡選出相符且不重複的人名
+                const name1 = getAppropriateName(stage1, usedNamesThisQuiz);
+                const name2 = getAppropriateName(stage2, usedNamesThisQuiz);
+                const name3 = getAppropriateName(stage3, usedNamesThisQuiz);
 
                 const isMax = Math.random() > 0.5;
                 let answerName = "";
@@ -1309,7 +1349,7 @@
                 });
             }
 
-            // 3. 數學題：可以使用範圍年齡 (生成 20 題備用)
+            // 3. 數學題：可以使用範圍年齡 (生成 20 題備用，動態人名符合年齡性別且不重複)
             const mathKeys = Object.keys(ageRanges);
             for (let i = 0; i < 20; i++) {
                 const shuffledStages = [...mathKeys].sort(() => 0.5 - Math.random());
@@ -1327,9 +1367,10 @@
                 if (isAdd) {
                     ansMin = r1[0] + r2[0];
                     ansMax = r1[1] + r2[1];
-                    questionText = `數學挑戰：若小明今年正好是「${stage1}」之年，小華是「${stage2}」之年，請問兩人的歲數相加是多少歲？`;
+                    const pName1 = getAppropriateName(stage1, usedNamesThisQuiz);
+                    const pName2 = getAppropriateName(stage2, usedNamesThisQuiz);
+                    questionText = `數學挑戰：若${pName1}今年正好是「${stage1}」之年，${pName2}是「${stage2}」之年，請問兩人的歲數相加是多少歲？`;
                 } else {
-                    // 減法確保大減小且不重疊
                     let sOlder, sYounger;
                     if (r1[0] > r2[1]) {
                         sOlder = stage1;
@@ -1338,7 +1379,6 @@
                         sOlder = stage2;
                         sYounger = stage1;
                     } else {
-                        // 重疊的話重來
                         i--;
                         continue;
                     }
@@ -1346,25 +1386,25 @@
                     const ry = ageRanges[sYounger];
                     ansMin = ro[0] - ry[1];
                     ansMax = ro[1] - ry[0];
-                    questionText = `數學挑戰：若老王今年正好是「${sOlder}」之年，小李是「${sYounger}」之年，請問兩人的年齡相差多少歲？`;
+
+                    const pOlder = getAppropriateName(sOlder, usedNamesThisQuiz);
+                    const pYounger = getAppropriateName(sYounger, usedNamesThisQuiz);
+                    questionText = `數學挑戰：若${pOlder}今年正好是「${sOlder}」之年，${pYounger}是「${sYounger}」之年，請問兩人的年齡相差多少歲？`;
                 }
 
-                // 隨機在 [ansMin, ansMax] 中挑一個數字當答案
                 const ansValue = Math.floor(Math.random() * (ansMax - ansMin + 1)) + ansMin;
 
-                // 誘導選項必須排除整個區間 [ansMin, ansMax] 的數字
                 const distractors = [];
                 let attempts = 0;
                 while (distractors.length < 3 && attempts < 100) {
                     attempts++;
-                    const offset = Math.floor(Math.random() * 20) - 10; // -10 ~ 9
+                    const offset = Math.floor(Math.random() * 20) - 10;
                     const val = ansValue + offset;
                     if (val > 0 && (val < ansMin || val > ansMax) && !distractors.includes(val)) {
                         distractors.push(val);
                     }
                 }
                 
-                // 如果嘗試失敗，防呆補足
                 while (distractors.length < 3) {
                     const fallbackVal = ansMax + distractors.length + 5;
                     distractors.push(fallbackVal);
@@ -1385,18 +1425,19 @@
                 });
             }
 
-            // 打亂各個池子
+            // 打亂池子
             basicPool.sort(() => 0.5 - Math.random());
             scenarioPool.sort(() => 0.5 - Math.random());
             mathPool.sort(() => 0.5 - Math.random());
 
-            // 挑選 8 題
+            // 挑選 12 題，並且確保 18 個年齡代稱全數在題目中出現過！
+            const TOTAL_QUIZ_COUNT = 12;
             const selected = [];
             const coveredStages = new Set();
             const allStages = ageData.map(d => d.name);
             let typeIndex = 0; // 0: Basic, 1: Scenario, 2: Math
 
-            while (selected.length < 8) {
+            while (selected.length < TOTAL_QUIZ_COUNT) {
                 let currentPool;
                 if (typeIndex === 0) currentPool = basicPool;
                 else if (typeIndex === 1) currentPool = scenarioPool;
@@ -1404,6 +1445,7 @@
 
                 let chosenIndex = -1;
 
+                // 優先挑選涵蓋「未曾出現過」年齡代稱的題目
                 if (coveredStages.size < allStages.length) {
                     const uncovered = allStages.filter(s => !coveredStages.has(s));
                     for (let i = 0; i < currentPool.length; i++) {
@@ -1422,14 +1464,31 @@
                     const q = currentPool.splice(chosenIndex, 1)[0];
                     selected.push(q);
                     q.stages.forEach(s => coveredStages.add(s));
-                } else {
-                    typeIndex = (typeIndex + 1) % 3;
-                    continue;
                 }
 
                 typeIndex = (typeIndex + 1) % 3;
+
+                // 防呆：若 pools 皆空則退出
+                if (basicPool.length === 0 && scenarioPool.length === 0 && mathPool.length === 0) {
+                    break;
+                }
             }
 
+            // 二次核對：如果仍有未覆蓋到的年齡代稱，從基礎題備用庫中補上替換最後幾題
+            if (coveredStages.size < allStages.length) {
+                const missingStages = allStages.filter(s => !coveredStages.has(s));
+                missingStages.forEach(mStage => {
+                    const backupIndex = basicPool.findIndex(bq => bq.stages.includes(mStage));
+                    if (backupIndex !== -1 && selected.length > 0) {
+                        const replacement = basicPool.splice(backupIndex, 1)[0];
+                        selected[selected.length - 1] = replacement;
+                        coveredStages.add(mStage);
+                    }
+                });
+            }
+
+            // 最終打亂題目順序
+            selected.sort(() => 0.5 - Math.random());
             return selected;
         }
 
@@ -1456,8 +1515,10 @@
             void qBox.offsetWidth;
             qBox.classList.add('fade-in-ink');
             
-            document.getElementById('quiz-progress-text').innerText = `進度：第 ${currentQuizIndex + 1} / 8 題`;
-            document.getElementById('quiz-score-text').innerText = `得分：${Math.round((quizScore / 8) * 100)}`;
+            const total = quizQuestions.length;
+            const currentPercentage = Math.min(100, Math.round((quizScore / total) * 100));
+            document.getElementById('quiz-progress-text').innerText = `進度：第 ${currentQuizIndex + 1} / ${total} 題`;
+            document.getElementById('quiz-score-text').innerText = `得分：${currentPercentage}`;
 
             document.getElementById('question-hint').style.display = 'block';
             document.getElementById('question-text').style.display = 'block';
@@ -1479,6 +1540,10 @@
         }
 
         function checkQuizAnswer(selected) {
+            // 立即停用選項按鈕點擊，防止重複觸發得分 bug
+            const optionCards = document.querySelectorAll('.option-card');
+            optionCards.forEach(card => card.style.pointerEvents = 'none');
+
             const q = quizQuestions[currentQuizIndex];
             const overlay = document.getElementById('feedback-overlay');
             const title = document.getElementById('feedback-title');
@@ -1502,7 +1567,7 @@
 
         function nextQuestion() {
             currentQuizIndex++;
-            if (currentQuizIndex < 8) {
+            if (currentQuizIndex < quizQuestions.length) {
                 loadQuizQuestion();
             } else {
                 showQuizResult();
@@ -1514,7 +1579,8 @@
             const resultStage = document.getElementById('result-stage');
             resultStage.style.display = 'block';
 
-            const finalScore = Math.round((quizScore / 8) * 100);
+            const total = quizQuestions.length;
+            const finalScore = Math.min(100, Math.round((quizScore / total) * 100));
             let text = "";
 
             if (finalScore === 100) {

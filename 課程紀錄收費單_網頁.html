@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>課程紀錄收費單自動產生器網頁</title>
+    <!-- Import Noto Sans TC Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- html2canvas 庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Load Tesseract.js CDN for Client-Side OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <style>
+        :root {
+            --primary-olive: #5C7C2F;
+            --primary-hover: #486324;
+            --light-olive: #C8E3B8;
+            --bg-main: #f4f7f2;
+            --bg-card: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-light: #4a5568;
+            --border-color: #cbd5e1;
+            --accent-red: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            padding: 20px 12px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 10px 0;
+        }
+
+        header h1 {
+            font-size: 2.1rem;
+            color: var(--primary-olive);
+            font-weight: 900;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        header p {
+            color: var(--text-light);
+            font-size: 0.98rem;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1.1fr 0.9fr;
+                align-items: start;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            color: var(--primary-olive);
+            margin-bottom: 16px;
+            border-left: 4px solid var(--primary-olive);
+            padding-left: 10px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: #334155;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-olive);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(92, 124, 47, 0.15);
+        }
+
+        .settings-panel {
+            background-color: #fafdf8;
+            border: 2px solid #a3d187;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(92, 124, 47, 0.1);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 900;
+            font-size: 1.15rem;
+            color: var(--primary-olive);
+            margin-bottom: 14px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .student-setting-row {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr 1.4fr 40px;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: #f0f7ea;
+            color: var(--primary-olive);
+            border: 1px solid #a3d187;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dropzone {
+            border: 2px dashed #a3d187;
+            border-radius: 12px;
+            padding: 30px 16px;
+            text-align: center;
+            background: #f0f7ea;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dropzone:hover {
+            border-color: var(--primary-olive);
+            background: #e4f2dc;
+        }
+
+        .dropzone-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .dropzone-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary-olive);
+            margin-bottom: 4px;
+        }
+
+        .dropzone-subtext {
+            font-size: 0.88rem;
+            color: #64748b;
+        }
+
+        #imagePreviewContainer {
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 220px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar-container {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .progress-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar-bg {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--primary-olive);
+            height: 100%;
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+
+        .item-row {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .item-fields {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 0.8fr 1fr 38px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            .item-fields { grid-template-columns: 1fr 1fr; }
+            .student-setting-row { grid-template-columns: 1fr 1fr; }
+        }
+
+        .btn-icon-del {
+            background: transparent;
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            border-radius: 6px;
+            height: 38px;
+            width: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .btn-icon-del:hover {
+            background-color: var(--accent-red);
+            color: white;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            min-height: 44px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-olive);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-danger {
+            background-color: #fee2e2;
+            color: var(--accent-red);
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(92, 124, 47, 0.25);
+            font-weight: 900;
+            background: linear-gradient(135deg, #5C7C2F 0%, #435b22 100%);
+            color: white;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        .btn-generate:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .summary-panel {
+            background: #f0f7ea;
+            border: 2px dashed #a3d187;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 15px;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--primary-olive);
+            border-top: 2px solid #a3d187;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .preview-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: sticky;
+            top: 20px;
+        }
+
+        .preview-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        #receipt-render-target {
+            overflow: auto;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 📱 嚴格固定 500px × 750px (2:3 黃金比例) 輸出，表格緊接在後，下方留白 */
+        .receipt-outer-frame {
+            width: 500px;
+            height: 750px;
+            max-width: 100%;
+            background-color: #C6DFB4;
+            padding: 20px 16px;
+            box-sizing: border-box;
+            color: #000000;
+            border-radius: 12px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .receipt-header-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 14px 16px;
+            height: 64px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+
+        .receipt-header-pills {
+            position: absolute;
+            left: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .receipt-pill {
+            width: 20px;
+            height: 8px;
+            background-color: #C6DFB4;
+            border-radius: 4px;
+        }
+
+        .receipt-title {
+            font-size: 23px;
+            font-weight: 900;
+            color: #000000;
+            letter-spacing: 0.5px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .receipt-body-card {
+            background-color: #ffffff;
+            border-radius: 4px;
+            padding: 22px 18px;
+            position: relative;
+            box-shadow: -3px 5px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            flex: 1;
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .receipt-body-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 20px 20px 0 0;
+            border-color: #5C7C2F transparent transparent transparent;
+            opacity: 0.15;
+        }
+
+        .receipt-section-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #000000;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .receipt-course-info {
+            font-size: 15px;
+            font-weight: 700;
+            color: #486324;
+            background-color: #f0f7ea;
+            border-left: 4px solid #5C7C2F;
+            padding: 6px 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .receipt-square-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #000000;
+        }
+
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+
+        .receipt-table th {
+            background-color: #5C7C2F;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 16.5px;
+            padding: 9px 6px;
+            border: 1px solid #000000;
+            text-align: center;
+        }
+
+        .receipt-table td {
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 8px 6px;
+            border: 1px solid #000000;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .receipt-table tfoot td {
+            background-color: #C8E3B8;
+            font-weight: 900;
+            font-size: 17px;
+            border: 1px solid #000000;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 課程紀錄收費單自動產生器網頁</h1>
+            <p>📱 固定 2:3 長寬比例圖片 ｜ 📋 講義時數單一表格 ｜ 📷 OCR 截圖辨識</p>
+        </header>
+
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">
+                <span>⚙️ 學生名冊與時薪設定 (安全儲存於本機裝置)</span>
+                <button class="btn btn-secondary" style="padding: 4px 12px; min-height: 32px; font-size: 0.85rem;" onclick="toggleSettings()">關閉面板</button>
+            </div>
+            
+            <div id="settingsStudentsList" style="margin-bottom: 12px;"></div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.88rem; min-height: 36px;" onclick="addStudentSettingRow()">＋ 新增學生資料</button>
+                <button class="btn btn-primary" style="padding: 6px 18px; font-size: 0.95rem; min-height: 36px;" onclick="saveStudentSettings()">💾 儲存學生名冊設定</button>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="layout-left">
+                
+                <div class="card">
+                    <h2>
+                        <span>1. 選擇學生與學生後台資料</span>
+                        <button class="btn btn-secondary" style="padding: 4px 12px; min-height: 32px; font-size: 0.85rem; background-color: var(--primary-olive); color: white;" onclick="toggleSettings()">⚙️ 學生後台設定</button>
+                    </h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="studentSelect">選取後台學生 (自動帶入時薪與課程)</label>
+                            <select id="studentSelect" onchange="onStudentSelectChange()">
+                                <option value="">-- 請選擇學生 --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentRate">時薪 ($/hr)</label>
+                            <input type="number" id="studentRate" value="" placeholder="例如: 900" oninput="onRateOrSubjectChange()">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 8px;">
+                        <label for="courseInfo">課程內容 / 備註 (顯示於收費單紀錄明細上方)</label>
+                        <input type="text" id="courseInfo" value="" placeholder="例如: 高一 1對1 $1000" oninput="onDataChange()">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>2. 截圖辨識 (OCR) 或 文字直接貼上</h2>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchInputTab('ocrTab', this)">📷 截圖辨識 (OCR)</button>
+                        <button class="tab-btn" onclick="switchInputTab('pasteTab', this)">📝 文字直接貼上</button>
+                    </div>
+
+                    <div id="ocrTab" class="tab-content active">
+                        <div class="dropzone" id="dropzone" onclick="triggerFileInput()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+                            <div class="dropzone-icon">📷</div>
+                            <div class="dropzone-text">點擊上傳 / 拖放 LINE 課程紀錄截圖至此</div>
+                            <div class="dropzone-subtext">💡 支援直接按 Ctrl+V 貼上剪貼簿圖片</div>
+                            <input type="file" id="fileInput" style="display:none;" accept="image/*" onchange="handleFileSelect(event)">
+                        </div>
+
+                        <div id="imagePreviewContainer">
+                            <img id="imagePreview" src="">
+                        </div>
+
+                        <div class="progress-bar-container" id="progressBarContainer">
+                            <div class="progress-bar-label">
+                                <span id="progressStatus">正在準備辨識引擎...</span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" id="progressBarFill"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pasteTab" class="tab-content">
+                        <textarea id="pasteTextArea" style="height: 140px;" placeholder="在此貼上 LINE 課程紀錄與講義文字...&#10;例如：&#10;7/1，1小&#10;7/8，1小&#10;古文素養攻略$205&#10;文意新8課$205"></textarea>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                            <button class="btn btn-secondary" style="background-color: var(--primary-olive); color: white;" onclick="parsePastedText()">⚡ 開始自動解析文字</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>3. 收費單標題與抬頭</h2>
+                    <div class="form-group">
+                        <label for="receipt-full-title">收費單完整標題 (圖片頂部標題)</label>
+                        <input type="text" id="receipt-full-title" value="2026/7  國文收費單" placeholder="例如：2026/7  國文收費單">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>
+                        <span>4. 明細表格內容校對 (上課與講義在同一表格)</span>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.85rem;" onclick="addLessonRow()">＋ 新增上課列</button>
+                            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.85rem; background-color:#e4f2dc; color:#5C7C2F;" onclick="addHandoutRow()">＋ 新增講義/其他列</button>
+                        </div>
+                    </h2>
+                    
+                    <span style="font-size: 0.88rem; color: #5C7C2F; font-weight: bold; cursor: pointer; text-decoration: underline;" onclick="toggleCustomTableHeaders()">⚙️ 自訂表格表頭名稱 (點擊展開/收合)</span>
+                    <div id="table-headers-custom" style="display: none; background: #fafdf8; padding: 12px; border-radius: 8px; border: 1px dashed #a3d187; margin-top: 8px; margin-bottom: 12px;">
+                        <div class="form-row">
+                            <div class="form-group"><label style="font-size: 0.75rem;">第 1 欄標題</label><input type="text" id="col1-name" value="日期"></div>
+                            <div class="form-group"><label style="font-size: 0.75rem;">第 2 欄標題</label><input type="text" id="col2-name" value="課程內容 / 項目"></div>
+                            <div class="form-group"><label style="font-size: 0.75rem;">第 3 欄標題</label><input type="text" id="col3-name" value="時數"></div>
+                            <div class="form-group"><label style="font-size: 0.75rem;">第 4 欄標題</label><input type="text" id="col4-name" value="費用"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label style="font-size: 0.75rem;">區塊標題</label><input type="text" id="lesson-section-title" value="■  上課紀錄"></div>
+                            <div class="form-group"><label style="font-size: 0.75rem;">總金額標籤</label><input type="text" id="total-label" value="金額總計"></div>
+                        </div>
+                    </div>
+
+                    <div id="lessons-container"></div>
+                </div>
+
+                <div class="card" style="background-color: #fafdf8;">
+                    <h2>5. 費用統計試算</h2>
+                    <div class="summary-panel">
+                        <div class="summary-line"><span>總上課時數：</span><span id="stat-total-hours">0 hr</span></div>
+                        <div class="summary-line"><span>上課費用小計：</span><span id="stat-lesson-total">$0</span></div>
+                        <div class="summary-line"><span>講義/其他小計：</span><span id="stat-other-total">$0</span></div>
+                        <div class="summary-total"><span>金額總計：</span><span id="stat-grand-total">$0</span></div>
+                    </div>
+
+                    <button class="btn btn-generate" onclick="generateReceiptImage()">📸 產生並下載收費單圖片 (PNG)</button>
+                    <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+                        <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem;" onclick="resetForm()">重設所有欄位</button>
+                        <span id="save-status" style="font-size: 0.85rem; color: #5C7C2F; font-weight: bold; align-self: center;"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layout-right">
+                <div class="preview-wrapper">
+                    <div class="preview-title">📱 固定 2:3 尺寸圖片即時預覽 (500px × 750px)</div>
+                    <div id="receipt-render-target"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="color: #5C7C2F; font-size: 1.3rem;">🎉 收費單圖片已成功生成！</h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">圖片尺寸與長寬比例已嚴格固定 (2:3 黃金比例)，隨時傳給家長都一致：</p>
+            <div id="modal-img-box"></div>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                <a id="btn-download-direct" class="btn" style="background-color: #5C7C2F; color: white; text-decoration: none;" download="收費單.png">💾 下載 PNG 圖片</a>
+                <button class="btn btn-secondary" onclick="closeModal()">關閉視窗</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultProfiles = {
+            "楊光楊明": { rate: 1000, subject: "國一 一對二" },
+            "睿恩": { rate: 900, subject: "高二 國文" },
+            "子芸": { rate: 825, subject: "高二 小團班" },
+            "家睿": { rate: 1000, subject: "國一 1對1" },
+            "尚恩": { rate: 900, subject: "國二 一對一" },
+            "宗澄": { rate: 1400, subject: "高二 一對一" },
+            "秉逸": { rate: 700, subject: "高一 小團班" },
+            "景翔": { rate: 500, subject: "高一 小團班" },
+            "庭妤": { rate: 950, subject: "高三 一對一" },
+            "瑋皓": { rate: 800, subject: "國三 一對一" },
+            "竑佑": { rate: 855, subject: "國二 一對一" },
+            "知穎": { rate: 765, subject: "高三 小團班" },
+            "睿祐": { rate: 840, subject: "高三 小團班" }
+        };
+
+        let studentProfiles = {};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadStudentProfiles();
+            loadSavedConfig();
+            bindAllInputs();
+            renderPreview();
+        });
+
+        function loadStudentProfiles() {
+            const raw = localStorage.getItem('line_billing_students');
+            if (raw) {
+                try { studentProfiles = JSON.parse(raw); } catch(e) { studentProfiles = JSON.parse(JSON.stringify(defaultProfiles)); }
+            } else {
+                studentProfiles = JSON.parse(JSON.stringify(defaultProfiles));
+                saveStudentProfilesToLocal();
+            }
+            populateStudentSelect();
+        }
+
+        function saveStudentProfilesToLocal() {
+            localStorage.setItem('line_billing_students', JSON.stringify(studentProfiles));
+        }
+
+        function populateStudentSelect() {
+            const select = document.getElementById('studentSelect');
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">-- 請選擇學生 --</option>';
+            Object.keys(studentProfiles).sort().forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.innerText = `${name} (${studentProfiles[name].subject} $${studentProfiles[name].rate}/hr)`;
+                select.appendChild(opt);
+            });
+            if (currentVal && studentProfiles[currentVal]) select.value = currentVal;
+        }
+
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'block';
+                renderSettingsStudentsUI();
+            } else { panel.style.display = 'none'; }
+        }
+
+        function renderSettingsStudentsUI() {
+            const container = document.getElementById('settingsStudentsList');
+            container.innerHTML = '';
+            Object.keys(studentProfiles).forEach(name => {
+                const p = studentProfiles[name];
+                addStudentSettingRowUI(container, name, p.rate, p.subject);
+            });
+            if (Object.keys(studentProfiles).length === 0) {
+                addStudentSettingRowUI(container, '', 900, '');
+            }
+        }
+
+        function addStudentSettingRow() {
+            const container = document.getElementById('settingsStudentsList');
+            addStudentSettingRowUI(container, '', 900, '');
+        }
+
+        function addStudentSettingRowUI(container, name, rate, subject) {
+            const div = document.createElement('div');
+            div.className = 'student-setting-row';
+            div.innerHTML = `
+                <input type="text" placeholder="學生姓名" class="set-name" value="${name}">
+                <input type="number" placeholder="時薪" class="set-rate" value="${rate}">
+                <input type="text" placeholder="課程名稱/備註" class="set-subject" value="${subject}">
+                <button class="btn-icon-del" onclick="this.parentElement.remove()">✕</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function saveStudentSettings() {
+            const newProfiles = {};
+            document.querySelectorAll('.student-setting-row').forEach(row => {
+                const name = row.querySelector('.set-name').value.trim();
+                const rate = parseFloat(row.querySelector('.set-rate').value) || 0;
+                const subject = row.querySelector('.set-subject').value.trim();
+                if (name) { newProfiles[name] = { rate, subject }; }
+            });
+            studentProfiles = newProfiles;
+            saveStudentProfilesToLocal();
+            populateStudentSelect();
+            alert('後台學生名冊設定已成功儲存！');
+            toggleSettings();
+        }
+
+        function onStudentSelectChange() {
+            const select = document.getElementById('studentSelect');
+            const name = select.value;
+            const currentTitle = document.getElementById('receipt-full-title').value;
+            const mMatch = currentTitle.match(/(\d{4}\/\d{1,2})/);
+            const yearMonth = mMatch ? mMatch[1] : `${new Date().getFullYear()}/${new Date().getMonth()+1}`;
+
+            if (name && studentProfiles[name]) {
+                const p = studentProfiles[name];
+                document.getElementById('studentRate').value = p.rate;
+                document.getElementById('receipt-full-title').value = `${yearMonth}  ${name}國文收費單`;
+                
+                const courseText = p.subject ? `${p.subject} $${p.rate}` : `${name} 國文 $${p.rate}`;
+                document.getElementById('courseInfo').value = courseText;
+                
+                const targetSubject = p.subject || `${name} 國文`;
+                document.querySelectorAll('#lessons-container .item-row').forEach(row => {
+                    const isHandout = row.getAttribute('data-is-handout') === 'true';
+                    if (!isHandout) {
+                        const contentInput = row.querySelector('.l-content');
+                        if (contentInput) {
+                            contentInput.value = targetSubject;
+                        }
+                    }
+                });
+            } else {
+                document.getElementById('studentRate').value = '';
+                document.getElementById('receipt-full-title').value = `${yearMonth}  國文收費單`;
+                document.getElementById('courseInfo').value = '';
+            }
+            recalculateLessonFees();
+            onDataChange();
+        }
+
+        function onRateOrSubjectChange() {
+            const name = document.getElementById('studentSelect').value;
+            if (name && studentProfiles[name]) {
+                const rate = document.getElementById('studentRate').value;
+                const subj = studentProfiles[name].subject || `${name} 國文`;
+                if (subj && rate) {
+                    document.getElementById('courseInfo').value = `${subj} $${rate}`;
+                }
+            }
+            recalculateLessonFees();
+            onDataChange();
+        }
+
+        function recalculateLessonFees() {
+            const rate = parseFloat(document.getElementById('studentRate').value) || 0;
+            document.querySelectorAll('#lessons-container .item-row').forEach(row => {
+                const isHandout = row.getAttribute('data-is-handout') === 'true';
+                if (!isHandout) {
+                    const hoursInput = row.querySelector('.l-hours');
+                    const feeInput = row.querySelector('.l-fee');
+                    if (hoursInput && feeInput) {
+                        const hours = parseFloat(hoursInput.value) || 0;
+                        if (hours > 0 && rate > 0) {
+                            feeInput.value = (Math.round(hours * rate * 100) / 100).toString();
+                        }
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('paste', function(e) {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let index in items) {
+                const item = items[index];
+                if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                    const blob = item.getAsFile();
+                    processImageFile(blob);
+                }
+            }
+        });
+
+        function switchInputTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function triggerFileInput() { document.getElementById('fileInput').click(); }
+        function handleFileSelect(e) { if (e.target.files.length > 0) processImageFile(e.target.files[0]); }
+        function handleDrop(e) { e.preventDefault(); if (e.dataTransfer.files.length > 0) processImageFile(e.dataTransfer.files[0]); }
+
+        function processImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('imagePreview').src = event.target.result;
+                document.getElementById('imagePreviewContainer').style.display = 'block';
+                runOCR(event.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function runOCR(imageSrc) {
+            const container = document.getElementById('progressBarContainer');
+            const fill = document.getElementById('progressBarFill');
+            const status = document.getElementById('progressStatus');
+            const percent = document.getElementById('progressPercent');
+
+            container.style.display = 'block';
+            fill.style.width = '0%';
+            status.innerText = "正在載入繁體中文辨識引擎...";
+            percent.innerText = "0%";
+
+            try {
+                const worker = await Tesseract.createWorker('chi_tra');
+                worker.logger = (m) => {
+                    if (m.status === 'recognizing text') {
+                        const progress = Math.round(m.progress * 100);
+                        fill.style.width = progress + '%';
+                        status.innerText = "正在掃描截圖文字...";
+                        percent.innerText = progress + '%';
+                    }
+                };
+
+                const ret = await worker.recognize(imageSrc);
+                status.innerText = "✅ 截圖辨識完成！已自動剖析明細";
+                await worker.terminate();
+
+                document.getElementById('pasteTextArea').value = ret.data.text;
+                parseText(ret.data.text);
+            } catch (err) {
+                console.error(err);
+                status.innerText = "⚠️ 截圖辨識受限，請直接於下方貼上文字！";
+            }
+        }
+
+        function parsePastedText() {
+            const text = document.getElementById('pasteTextArea').value;
+            parseText(text);
+        }
+
+        function isHandoutOrBookLine(line) {
+            const dateStrMatch = /((?:1[0-2]|[1-9])(?:\/|月)(?:[1-2][0-9]|3[0-1]|[1-9]))/.test(line);
+            const hoursStrMatch = /([0-9]+(?:\.[0-9]+)?)\s*(?:小時|h|hr|點|小)/i.test(line);
+            
+            if (dateStrMatch && hoursStrMatch) return false;
+
+            const priceMatch = /(\$\s*\d+|\d+\s*元|\$\d+|\d{2,5})/.test(line);
+            const keywordMatch = /(講義|評量|教材|題庫|書籍|報名費|雜費|特別項目|講義費|教材費|攻略|課|卷|冊|單)/.test(line);
+
+            return (priceMatch || keywordMatch) && !hoursStrMatch;
+        }
+
+        function parseText(text) {
+            const lines = text.split('\n');
+            const newItems = [];
+
+            let matchedStudentInText = "";
+            for (let line of lines) {
+                const trimmed = line.trim();
+                for (let name in studentProfiles) {
+                    if (trimmed.includes(name)) {
+                        matchedStudentInText = name;
+                        break;
+                    }
+                }
+                if (matchedStudentInText) break;
+            }
+
+            const currentlySelectedStudent = document.getElementById('studentSelect').value;
+            const targetStudentName = matchedStudentInText || currentlySelectedStudent;
+
+            if (matchedStudentInText && studentProfiles[matchedStudentInText]) {
+                document.getElementById('studentSelect').value = matchedStudentInText;
+            }
+
+            let currentRate = parseFloat(document.getElementById('studentRate').value);
+            if ((!currentRate || isNaN(currentRate)) && targetStudentName && studentProfiles[targetStudentName]) {
+                currentRate = studentProfiles[targetStudentName].rate;
+                document.getElementById('studentRate').value = currentRate;
+            }
+            if (!currentRate || isNaN(currentRate)) currentRate = 900;
+
+            if (targetStudentName && studentProfiles[targetStudentName]) {
+                const p = studentProfiles[targetStudentName];
+                const courseText = p.subject ? `${p.subject} $${currentRate}` : `${targetStudentName} 國文 $${currentRate}`;
+                document.getElementById('courseInfo').value = courseText;
+            }
+
+            const currentSubject = (targetStudentName && studentProfiles[targetStudentName]) 
+                ? (studentProfiles[targetStudentName].subject || `${targetStudentName} 國文`) 
+                : '國文課程';
+
+            const dateRegex = /((?:1[0-2]|[1-9])(?:\/|月)(?:[1-2][0-9]|3[0-1]|[1-9])(?:日)?)/;
+            const monthRegex = /(1[0-2]|[1-9])\s*月/;
+            const hourRegex = /([0-9]+(?:\.[0-9]+)?)\s*(?:小時|h|hr|點|小)?/i;
+            const feeRegex = /(?:費用|金額|單價|共|\$|\:\s*)\s*(\d{3,5})/;
+
+            let detectedMonth = "";
+            const mMatch = text.match(monthRegex);
+            if (mMatch) {
+                detectedMonth = mMatch[1];
+            }
+
+            lines.forEach(line => {
+                const trimmed = line.trim();
+                if (trimmed.length === 0) return;
+
+                if (isHandoutOrBookLine(trimmed)) {
+                    let itemDate = "講義"; // 講義/教材項目預設日期欄顯示「講義」
+                    const dMatch = trimmed.match(dateRegex);
+                    if (dMatch) {
+                        itemDate = dMatch[1].replace('月', '/').replace('日', '');
+                        if (!detectedMonth) {
+                            const parts = itemDate.split('/');
+                            if (parts.length >= 1) detectedMonth = parts[0];
+                        }
+                    }
+
+                    let price = "300";
+                    const pMatch = trimmed.match(/(\$\s*\d{2,5})|(\d{2,5}\s*元)|(\$\d{2,5})/);
+                    if (pMatch) {
+                        const matchedStr = pMatch[0];
+                        price = matchedStr.replace(/[^\d]/g, '');
+                    }
+
+                    let itemName = trimmed;
+                    if (dMatch) itemName = itemName.replace(dMatch[0], '');
+                    const rawPriceMatch = trimmed.match(/(\$\s*\d{2,5})|(\d{2,5}\s*元)/);
+                    if (rawPriceMatch) itemName = itemName.replace(rawPriceMatch[0], '');
+                    else if (pMatch) itemName = itemName.replace(pMatch[0], '');
+                    
+                    itemName = itemName.replace(/[:：，,]/g, ' ').trim();
+                    if (!itemName || itemName.length < 2) itemName = "講義/教材費";
+
+                    newItems.push({ date: itemDate, content: itemName, hours: '-', fee: price, isHandout: true });
+                    return;
+                }
+
+                const dateMatch = trimmed.match(dateRegex);
+                if (dateMatch) {
+                    const dateStr = dateMatch[1].replace('月', '/').replace('日', '');
+                    
+                    if (!detectedMonth) {
+                        const parts = dateStr.split('/');
+                        if (parts.length >= 1) detectedMonth = parts[0];
+                    }
+
+                    const remainingLine = trimmed.replace(dateMatch[1], '');
+                    
+                    let hours = '1.5';
+                    const hourMatch = remainingLine.match(hourRegex);
+                    if (hourMatch) {
+                        const hVal = parseFloat(hourMatch[1]);
+                        if (!isNaN(hVal) && hVal > 0 && hVal < 10) hours = hVal.toString();
+                    }
+
+                    let fee = (Math.round(parseFloat(hours) * currentRate * 100) / 100).toString();
+                    const feeMatch = remainingLine.match(feeRegex);
+                    if (feeMatch) fee = feeMatch[1];
+
+                    newItems.push({ date: dateStr, content: currentSubject, hours: hours, fee: fee, isHandout: false });
+                }
+            });
+
+            const year = new Date().getFullYear();
+            const displayMonth = detectedMonth || (new Date().getMonth() + 1).toString();
+            const finalStudentName = targetStudentName || "學生";
+            document.getElementById('receipt-full-title').value = `${year}/${displayMonth}  ${finalStudentName}國文收費單`;
+
+            if (newItems.length > 0) {
+                document.getElementById('lessons-container').innerHTML = '';
+                newItems.forEach(item => {
+                    if (item.isHandout) addHandoutRow(item);
+                    else addLessonRow(item);
+                });
+            }
+
+            onDataChange();
+        }
+
+        function bindAllInputs() {
+            const ids = [
+                'receipt-full-title', 'courseInfo', 'col1-name', 'col2-name', 'col3-name', 'col4-name',
+                'lesson-section-title', 'total-label'
+            ];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', () => {
+                        saveConfigToLocal();
+                        renderPreview();
+                    });
+                }
+            });
+        }
+
+        function toggleCustomTableHeaders() {
+            const box = document.getElementById('table-headers-custom');
+            if (box) box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+        }
+
+        function addLessonRow(data = { date: '', content: '', hours: '', fee: '' }) {
+            const container = document.getElementById('lessons-container');
+            const rowId = 'row-' + Date.now() + Math.random().toString(36).substr(2, 4);
+            const html = `
+                <div class="item-row" id="${rowId}" data-is-handout="false">
+                    <div class="item-fields">
+                        <div><label style="font-size:0.75rem;">日期</label><input type="text" class="l-date" placeholder="6/6" value="${data.date}" oninput="onDataChange()"></div>
+                        <div><label style="font-size:0.75rem;">課程內容 / 項目</label><input type="text" class="l-content" placeholder="課程內容" value="${data.content}" oninput="onDataChange()"></div>
+                        <div><label style="font-size:0.75rem;">時數</label><input type="text" class="l-hours" placeholder="1.5" value="${data.hours}" oninput="onRowHoursChange('${rowId}')"></div>
+                        <div><label style="font-size:0.75rem;">費用($)</label><input type="text" class="l-fee" placeholder="0" value="${data.fee}" oninput="onDataChange()"></div>
+                        <button class="btn-icon-del" style="margin-top:16px;" onclick="removeRow('${rowId}')">✕</button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            onDataChange();
+        }
+
+        function addHandoutRow(data = { date: '講義', content: '講義費', hours: '-', fee: '300' }) {
+            const container = document.getElementById('lessons-container');
+            const rowId = 'row-' + Date.now() + Math.random().toString(36).substr(2, 4);
+            const html = `
+                <div class="item-row" id="${rowId}" data-is-handout="true" style="border-left: 4px solid #5C7C2F; background: #fafdf8;">
+                    <div class="item-fields">
+                        <div><label style="font-size:0.75rem;">日期/類型</label><input type="text" class="l-date" placeholder="講義" value="${data.date}" oninput="onDataChange()"></div>
+                        <div><label style="font-size:0.75rem;">講義/教材名稱</label><input type="text" class="l-content" placeholder="講義費" value="${data.content}" oninput="onDataChange()"></div>
+                        <div><label style="font-size:0.75rem;">時數</label><input type="text" class="l-hours" placeholder="-" value="${data.hours}" oninput="onDataChange()"></div>
+                        <div><label style="font-size:0.75rem;">費用($)</label><input type="text" class="l-fee" placeholder="300" value="${data.fee}" oninput="onDataChange()"></div>
+                        <button class="btn-icon-del" style="margin-top:16px;" onclick="removeRow('${rowId}')">✕</button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            onDataChange();
+        }
+
+        function onRowHoursChange(rowId) {
+            const row = document.getElementById(rowId);
+            if (row && row.getAttribute('data-is-handout') !== 'true') {
+                const rate = parseFloat(document.getElementById('studentRate').value) || 0;
+                const hoursInput = row.querySelector('.l-hours');
+                const feeInput = row.querySelector('.l-fee');
+                if (hoursInput && feeInput && rate > 0) {
+                    const h = parseFloat(hoursInput.value) || 0;
+                    feeInput.value = (Math.round(h * rate * 100) / 100).toString();
+                }
+            }
+            onDataChange();
+        }
+
+        function removeRow(rowId) {
+            const el = document.getElementById(rowId);
+            if (el) { el.remove(); onDataChange(); }
+        }
+
+        function onDataChange() {
+            calculateTotals();
+            saveConfigToLocal();
+            renderPreview();
+        }
+
+        function getFormData() {
+            return {
+                fullTitle: document.getElementById('receipt-full-title').value.trim() || '2026/7  國文收費單',
+                courseInfo: document.getElementById('courseInfo') ? document.getElementById('courseInfo').value.trim() : '',
+                col1Name: document.getElementById('col1-name').value.trim() || '日期',
+                col2Name: document.getElementById('col2-name').value.trim() || '課程內容 / 項目',
+                col3Name: document.getElementById('col3-name').value.trim() || '時數',
+                col4Name: document.getElementById('col4-name').value.trim() || '費用',
+                lessonSectionTitle: document.getElementById('lesson-section-title').value.trim() || '■  上課紀錄',
+                totalLabel: document.getElementById('total-label').value.trim() || '金額總計',
+                items: Array.from(document.querySelectorAll('#lessons-container .item-row')).map(row => ({
+                    date: row.querySelector('.l-date').value.trim(),
+                    content: row.querySelector('.l-content').value.trim(),
+                    hours: row.querySelector('.l-hours').value.trim(),
+                    fee: row.querySelector('.l-fee').value.trim(),
+                    isHandout: row.getAttribute('data-is-handout') === 'true'
+                })).filter(i => i.date || i.content || i.hours || i.fee)
+            };
+        }
+
+        function calculateTotals() {
+            const data = getFormData();
+            let totalHours = 0, lessonTotal = 0, otherTotal = 0;
+            data.items.forEach(i => {
+                const fee = parseFloat(i.fee) || 0;
+                if (i.isHandout) {
+                    otherTotal += fee;
+                } else {
+                    totalHours += parseFloat(i.hours) || 0;
+                    lessonTotal += fee;
+                }
+            });
+            // 精準加總精確小數後，僅在最終總金額進行 Math.round() 四捨五入成整數！
+            const grandTotal = Math.round(lessonTotal + otherTotal);
+
+            document.getElementById('stat-total-hours').textContent = (Math.round(totalHours * 100) / 100) + ' hr';
+            document.getElementById('stat-lesson-total').textContent = '$' + (Math.round(lessonTotal * 100) / 100);
+            document.getElementById('stat-other-total').textContent = '$' + (Math.round(otherTotal * 100) / 100);
+            document.getElementById('stat-grand-total').textContent = '$' + grandTotal;
+
+            return { totalHours: Math.round(totalHours * 100) / 100, lessonTotal, otherTotal, grandTotal };
+        }
+
+        function renderPreview() {
+            const data = getFormData();
+            const totals = calculateTotals();
+
+            let rowsHtml = '';
+            if (data.items.length > 0) {
+                data.items.forEach(i => {
+                    const hoursDisp = (i.hours && i.hours !== '-') ? (i.hours.includes('hr') ? i.hours : i.hours) : '-';
+                    const feeDisp = i.fee !== '' ? i.fee : '';
+                    rowsHtml += `<tr><td style="width: 20%;">${i.date}</td><td style="width: 42%;">${i.content}</td><td style="width: 18%;">${hoursDisp}</td><td style="width: 20%;">${feeDisp}</td></tr>`;
+                });
+            } else {
+                rowsHtml = `<tr><td colspan="4" style="color:#666; font-style:italic;">無收費明細紀錄</td></tr>`;
+            }
+
+            const fullHtml = `
+                <div class="receipt-outer-frame" id="receipt-capture-box">
+                    <div class="receipt-header-card">
+                        <div class="receipt-header-pills">
+                            <div class="receipt-pill"></div><div class="receipt-pill"></div>
+                            <div class="receipt-pill"></div><div class="receipt-pill"></div>
+                        </div>
+                        <div class="receipt-title">${data.fullTitle}</div>
+                    </div>
+                    <div class="receipt-body-card">
+                        <div class="receipt-section-title">${data.lessonSectionTitle}</div>
+                        ${data.courseInfo ? `<div class="receipt-course-info">📌 課程內容：${data.courseInfo}</div>` : ''}
+                        <table class="receipt-table">
+                            <thead><tr><th style="width: 20%;">${data.col1Name}</th><th style="width: 42%;">${data.col2Name}</th><th style="width: 18%;">${data.col3Name}</th><th style="width: 20%;">${data.col4Name}</th></tr></thead>
+                            <tbody>${rowsHtml}</tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" style="text-align: center;">${data.totalLabel}</td>
+                                    <td>${totals.totalHours}hr</td>
+                                    <td style="font-size: 19px; color: #1e3a0f;">$${totals.grandTotal}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            `;
+            document.getElementById('receipt-render-target').innerHTML = fullHtml;
+        }
+
+        function generateReceiptImage() {
+            const data = getFormData();
+            data.totals = calculateTotals();
+
+            const element = document.getElementById('receipt-capture-box');
+            const filename = `${data.fullTitle.replace(/\s+/g, '_')}.png`;
+
+            if (typeof html2canvas === 'function' && element) {
+                html2canvas(element, {
+                    scale: 3, // 嚴格 3 倍超高畫質，固定 1500px × 2250px (2:3 黃金比例)
+                    width: 500,
+                    height: 750,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#C6DFB4',
+                    logging: false
+                }).then(canvas => {
+                    showImageResult(canvas.toDataURL('image/png'), filename);
+                }).catch(err => {
+                    useDirectCanvasFallback(data, filename);
+                });
+            } else {
+                useDirectCanvasFallback(data, filename);
+            }
+        }
+
+        function useDirectCanvasFallback(data, filename) {
+            try {
+                const canvas = document.createElement('canvas');
+                const width = 500;
+                const height = 750; // 嚴格固定 750 像素高度！
+
+                canvas.width = width * 3; canvas.height = height * 3;
+                const ctx = canvas.getContext('2d');
+                ctx.scale(3, 3);
+
+                ctx.fillStyle = '#C6DFB4'; ctx.fillRect(0, 0, width, height);
+
+                ctx.fillStyle = '#FFFFFF'; roundRect(ctx, 16, 20, width - 32, 64, 12, true, false);
+                ctx.fillStyle = '#C6DFB4'; [32, 43, 54, 65].forEach(topY => roundRect(ctx, 32, topY, 20, 7, 3, true, false));
+
+                ctx.fillStyle = '#000000'; ctx.font = '900 23px "Noto Sans TC", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(data.fullTitle, width / 2, 52);
+
+                const bodyY = 98, cardW = width - 32, cardH = height - bodyY - 20;
+                ctx.fillStyle = '#FFFFFF'; roundRect(ctx, 16, bodyY, cardW, cardH, 2, true, false);
+
+                let curY = bodyY + 22;
+                ctx.fillStyle = '#000000'; ctx.font = '900 18px "Noto Sans TC", sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+                ctx.fillRect(32, curY + 3, 12, 12); ctx.fillText(data.lessonSectionTitle.replace(/^■\s*/, ''), 52, curY);
+
+                curY += 30;
+                if (data.courseInfo) {
+                    ctx.fillStyle = '#f0f7ea';
+                    roundRect(ctx, 32, curY, cardW - 32, 28, 4, true, false);
+                    ctx.fillStyle = '#5C7C2F';
+                    ctx.fillRect(32, curY, 4, 28);
+                    
+                    ctx.fillStyle = '#486324';
+                    ctx.font = '700 15px "Noto Sans TC", sans-serif';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('📌 課程內容：' + data.courseInfo, 42, curY + 14);
+                    
+                    curY += 36;
+                }
+                const tblX = 32, tblW = cardW - 32, colW = [tblW * 0.20, tblW * 0.42, tblW * 0.18, tblW * 0.20];
+
+                ctx.fillStyle = '#5C7C2F'; ctx.fillRect(tblX, curY, tblW, 34); ctx.strokeRect(tblX, curY, tblW, 34);
+                ctx.fillStyle = '#FFFFFF'; ctx.font = '900 16.5px "Noto Sans TC", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(data.col1Name, tblX + colW[0]/2, curY + 17);
+                ctx.fillText(data.col2Name, tblX + colW[0] + colW[1]/2, curY + 17);
+                ctx.fillText(data.col3Name, tblX + colW[0] + colW[1] + colW[2]/2, curY + 17);
+                ctx.fillText(data.col4Name, tblX + colW[0] + colW[1] + colW[2] + colW[3]/2, curY + 17);
+
+                curY += 34;
+                ctx.font = '600 16px "Noto Sans TC", sans-serif';
+                if (data.items.length > 0) {
+                    data.items.forEach(i => {
+                        ctx.fillStyle = '#FFFFFF'; ctx.fillRect(tblX, curY, tblW, 34); ctx.strokeRect(tblX, curY, tblW, 34);
+                        ctx.fillStyle = '#000000';
+                        const feeDisp = i.fee !== '' ? i.fee : '';
+                        ctx.fillText(i.date, tblX + colW[0]/2, curY + 17);
+                        ctx.fillText(i.content, tblX + colW[0] + colW[1]/2, curY + 17);
+                        ctx.fillText(i.hours || '-', tblX + colW[0] + colW[1] + colW[2]/2, curY + 17);
+                        ctx.fillText(feeDisp, tblX + colW[0] + colW[1] + colW[2] + colW[3]/2, curY + 17);
+                        curY += 34;
+                    });
+                } else {
+                    ctx.fillStyle = '#FFFFFF'; ctx.fillRect(tblX, curY, tblW, 34); ctx.strokeRect(tblX, curY, tblW, 34);
+                    ctx.fillStyle = '#666666'; ctx.fillText('無收費明細紀錄', tblX + tblW/2, curY + 17); curY += 34;
+                }
+
+                ctx.fillStyle = '#C8E3B8'; ctx.fillRect(tblX, curY, tblW, 36); ctx.strokeRect(tblX, curY, tblW, 36);
+                ctx.fillStyle = '#000000'; ctx.font = '900 17px "Noto Sans TC", sans-serif';
+                ctx.fillText(data.totalLabel, tblX + (colW[0] + colW[1])/2, curY + 18);
+                ctx.fillText(data.totals.totalHours + 'hr', tblX + colW[0] + colW[1] + colW[2]/2, curY + 18);
+                ctx.fillText('$' + data.totals.grandTotal, tblX + colW[0] + colW[1] + colW[2] + colW[3]/2, curY + 18);
+
+                showImageResult(canvas.toDataURL('image/png'), filename);
+            } catch(e) {
+                alert('圖片產生失敗，請確認內容！');
+            }
+        }
+
+        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+            ctx.beginPath(); ctx.moveTo(x + radius, y); ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius); ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius); ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y); ctx.closePath();
+            if (fill) ctx.fill(); if (stroke) ctx.stroke();
+        }
+
+        function showImageResult(imgUrl, filename) {
+            const modal = document.getElementById('image-modal');
+            const box = document.getElementById('modal-img-box');
+            const dlBtn = document.getElementById('btn-download-direct');
+
+            box.innerHTML = `<img src="${imgUrl}" alt="收費單圖片">`;
+            dlBtn.href = imgUrl; dlBtn.download = filename;
+            modal.style.display = 'flex';
+
+            const tempLink = document.createElement('a');
+            tempLink.href = imgUrl; tempLink.download = filename;
+            document.body.appendChild(tempLink); tempLink.click(); document.body.removeChild(tempLink);
+        }
+
+        function closeModal() { document.getElementById('image-modal').style.display = 'none'; }
+
+        function saveConfigToLocal() {
+            const data = getFormData();
+            localStorage.setItem('fee_receipt_config_v4', JSON.stringify(data));
+        }
+
+        function loadSavedConfig() {
+            const raw = localStorage.getItem('fee_receipt_config_v4');
+            if (raw) {
+                try {
+                    const data = JSON.parse(raw);
+                    if (data.fullTitle) document.getElementById('receipt-full-title').value = data.fullTitle;
+                    if (data.courseInfo !== undefined) document.getElementById('courseInfo').value = data.courseInfo;
+                    if (data.col1Name) document.getElementById('col1-name').value = data.col1Name;
+                    if (data.col2Name) document.getElementById('col2-name').value = data.col2Name;
+                    if (data.col3Name) document.getElementById('col3-name').value = data.col3Name;
+                    if (data.col4Name) document.getElementById('col4-name').value = data.col4Name;
+                    if (data.totalLabel) document.getElementById('total-label').value = data.totalLabel;
+
+                    const lessonsContainer = document.getElementById('lessons-container');
+                    lessonsContainer.innerHTML = '';
+                    if (data.items && data.items.length > 0) {
+                        data.items.forEach(item => {
+                            if (item.isHandout) addHandoutRow(item);
+                            else addLessonRow(item);
+                        });
+                    } else {
+                        addLessonRow({ date: '', content: '', hours: '', fee: '' });
+                    }
+                    return;
+                } catch(e) {}
+            }
+            document.getElementById('lessons-container').innerHTML = '';
+            addLessonRow({ date: '', content: '', hours: '', fee: '' });
+        }
+
+        function resetForm() {
+            if (confirm('確定要重設並清空所有收費單欄位嗎？')) {
+                localStorage.removeItem('fee_receipt_config_v4');
+                
+                document.getElementById('studentSelect').value = '';
+                document.getElementById('studentRate').value = '';
+                document.getElementById('courseInfo').value = '';
+                
+                const now = new Date();
+                const yearMonth = `${now.getFullYear()}/${now.getMonth() + 1}`;
+                document.getElementById('receipt-full-title').value = `${yearMonth}  國文收費單`;
+                document.getElementById('col1-name').value = '日期';
+                document.getElementById('col2-name').value = '課程內容 / 項目';
+                document.getElementById('col3-name').value = '時數';
+                document.getElementById('col4-name').value = '費用';
+                document.getElementById('lesson-section-title').value = '■  上課紀錄';
+                document.getElementById('total-label').value = '金額總計';
+                
+                document.getElementById('pasteTextArea').value = '';
+                document.getElementById('imagePreviewContainer').style.display = 'none';
+                document.getElementById('imagePreview').src = '';
+                document.getElementById('progressBarContainer').style.display = 'none';
+                document.getElementById('fileInput').value = '';
+                
+                document.getElementById('lessons-container').innerHTML = '';
+                addLessonRow({ date: '', content: '', hours: '', fee: '' });
+                
+                onDataChange();
+                
+                const saveStatus = document.getElementById('save-status');
+                if (saveStatus) {
+                    saveStatus.innerText = '✅ 已完全重設所有欄位';
+                    setTimeout(() => { saveStatus.innerText = ''; }, 2000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

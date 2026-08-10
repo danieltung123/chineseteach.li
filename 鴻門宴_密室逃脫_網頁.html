@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>〈鴻門宴〉歷史解謎密室逃脫｜高中國文互動網頁</title>
+    <meta name="description" content="高中國文經典課文〈鴻門宴〉沉浸式密室逃脫互動網頁。融入古代座次尊卑、通假字、古今異義、人物性格與經典典故解謎。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Serif+TC:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0912;
+            --card-bg: rgba(22, 19, 36, 0.85);
+            --gold-primary: #dfb15b;
+            --gold-light: #fbe3a1;
+            --crimson: #9e1b1b;
+            --crimson-bright: #d93838;
+            --ink-text: #e6e4ea;
+            --muted-text: #a09cb0;
+            --accent-blue: #3a7bd5;
+            --glass-border: rgba(223, 177, 91, 0.3);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow-glow: 0 0 25px rgba(223, 177, 91, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif TC', serif, system-ui;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--ink-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Particle Background */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* App Container */
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header Navigation */
+        header {
+            background: rgba(15, 13, 25, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-title h1 {
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            letter-spacing: 2px;
+            font-weight: 900;
+            text-shadow: 0 2px 10px rgba(223, 177, 91, 0.4);
+        }
+
+        .brand-badge {
+            background: var(--crimson);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.95rem;
+        }
+
+        .stat-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-val {
+            color: var(--gold-light);
+            font-weight: 700;
+        }
+
+        .audio-btn {
+            background: none;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .audio-btn:hover {
+            background: var(--gold-primary);
+            color: #000;
+        }
+
+        /* Progress Bar Timeline */
+        .timeline-container {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stage-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .stage-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            right: 5%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .stage-progress-fill {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--crimson), var(--gold-primary));
+            transform: translateY(-50%);
+            z-index: 1;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .step-node {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: default;
+        }
+
+        .node-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #151322;
+            border: 2px solid var(--muted-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--muted-text);
+            transition: all 0.4s;
+        }
+
+        .step-node.active .node-circle {
+            border-color: var(--gold-primary);
+            background: var(--crimson);
+            color: #fff;
+            box-shadow: 0 0 15px var(--crimson-bright);
+            transform: scale(1.15);
+        }
+
+        .step-node.completed .node-circle {
+            border-color: var(--gold-primary);
+            background: var(--gold-primary);
+            color: #000;
+        }
+
+        .node-label {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+            white-space: nowrap;
+        }
+
+        .step-node.active .node-label {
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        /* Main Game Stage Area */
+        .stage-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-glow);
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .stage-header {
+            border-bottom: 1px solid rgba(223, 177, 91, 0.2);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stage-tag {
+            color: var(--gold-primary);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .stage-title {
+            font-size: 1.6rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* Story Context Box */
+        .story-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 4px solid var(--crimson-bright);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin-bottom: 20px;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: #d8d4e4;
+        }
+
+        /* Interactive Question Block */
+        .question-block {
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            color: var(--gold-light);
+            margin-bottom: 16px;
+            line-height: 1.6;
+            font-weight: 700;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: rgba(30, 26, 48, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--ink-text);
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--gold-primary);
+            background: rgba(223, 177, 91, 0.15);
+            transform: translateX(6px);
+        }
+
+        .option-btn.selected {
+            border-color: var(--gold-primary);
+            background: rgba(223, 177, 91, 0.25);
+        }
+
+        .option-btn.correct {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.25) !important;
+            color: #abf7c8;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--crimson-bright);
+            background: rgba(217, 56, 56, 0.25) !important;
+            color: #ffb8b8;
+        }
+
+        .option-key {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* Seating Map Custom Widget for Stage 2 */
+        .seating-map-widget {
+            background: rgba(10, 8, 20, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .compass-header {
+            color: var(--gold-primary);
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .table-grid {
+            display: grid;
+            grid-template-columns: 80px 140px 80px;
+            grid-template-rows: 60px 100px 60px;
+            gap: 10px;
+            align-items: center;
+            justify-items: center;
+            position: relative;
+        }
+
+        .table-center {
+            grid-column: 2;
+            grid-row: 2;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4a2c11, #8b4513);
+            border: 2px solid var(--gold-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-light);
+            font-weight: bold;
+            font-size: 1.05rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .seat-slot {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed rgba(223, 177, 91, 0.4);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--muted-text);
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 4px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .seat-slot:hover {
+            border-color: var(--gold-primary);
+            background: rgba(223, 177, 91, 0.1);
+        }
+
+        .seat-slot.active-seat {
+            border-style: solid;
+            border-color: var(--gold-primary);
+            background: rgba(158, 27, 27, 0.6);
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--crimson-bright);
+        }
+
+        .seat-north { grid-column: 2; grid-row: 1; }
+        .seat-south { grid-column: 2; grid-row: 3; }
+        .seat-west  { grid-column: 1; grid-row: 2; }
+        .seat-east  { grid-column: 3; grid-row: 2; }
+
+        /* Action Buttons Area */
+        .stage-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .hint-btn {
+            background: rgba(223, 177, 91, 0.15);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-light);
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hint-btn:hover {
+            background: var(--gold-primary);
+            color: #000;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--crimson), #c0292b);
+            border: 1px solid var(--crimson-bright);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(217, 56, 56, 0.4);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #bd2121, #e74c3c);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217, 56, 56, 0.6);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: #141122;
+            border: 2px solid var(--gold-primary);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 0 35px rgba(223, 177, 91, 0.3);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-title {
+            color: var(--gold-primary);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(223, 177, 91, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .modal-content {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #dcd9e8;
+            margin-bottom: 24px;
+        }
+
+        .quote-box {
+            background: rgba(223, 177, 91, 0.08);
+            border-left: 3px solid var(--gold-primary);
+            padding: 10px 14px;
+            margin: 12px 0;
+            font-style: italic;
+            color: var(--gold-light);
+        }
+
+        .close-modal-btn {
+            background: var(--gold-primary);
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
+            transition: all 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: var(--gold-light);
+        }
+
+        /* Certificate / Victory Screen */
+        .certificate-container {
+            display: none;
+            background: linear-gradient(135deg, #1a162b, #0d0b18);
+            border: 3px double var(--gold-primary);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(223, 177, 91, 0.4);
+            position: relative;
+        }
+
+        .cert-header {
+            color: var(--gold-primary);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+            font-weight: 900;
+        }
+
+        .cert-sub {
+            color: var(--muted-text);
+            font-size: 1rem;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .cert-name {
+            font-size: 1.8rem;
+            color: #fff;
+            border-bottom: 2px solid var(--gold-primary);
+            display: inline-block;
+            padding: 0 20px 5px;
+            margin-bottom: 20px;
+        }
+
+        .cert-score-box {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+        }
+
+        .cert-score-item {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            padding: 15px 25px;
+            border-radius: var(--radius-md);
+        }
+
+        .cert-score-item .val {
+            font-size: 1.8rem;
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        .cert-score-item .lbl {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .cert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--crimson), #8b0000);
+            color: var(--gold-light);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 1px solid var(--gold-primary);
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(217, 56, 56, 0.5);
+        }
+
+        .restart-btn {
+            background: var(--gold-primary);
+            color: #000;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            background: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container { padding: 10px; }
+            header { flex-direction: column; gap: 12px; align-items: flex-start; }
+            .stage-steps { overflow-x: auto; padding-bottom: 10px; }
+            .node-label { font-size: 0.7rem; }
+            .stage-card { padding: 20px; }
+            .cert-score-box { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Embers / Ink Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="app-container">
+        <!-- Header Controls -->
+        <header>
+            <div class="brand-title">
+                <h1>鴻門宴</h1>
+                <span class="brand-badge">高中國文密室逃脫網頁</span>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <span>智謀值：</span>
+                    <span class="stat-val" id="scoreVal">100</span>
+                </div>
+                <div class="stat-box">
+                    <span>時間：</span>
+                    <span class="stat-val" id="timerVal">00:00</span>
+                </div>
+                <button class="audio-btn" id="audioToggle" onclick="toggleAudio()">
+                    <span id="audioIcon">🔊</span> 音效: 開
+                </button>
+            </div>
+        </header>
+
+        <!-- Timeline Progress Bar -->
+        <div class="timeline-container">
+            <div class="stage-steps">
+                <div class="stage-progress-fill" id="progressFill"></div>
+                <div class="step-node active" id="node-1">
+                    <div class="node-circle">一</div>
+                    <span class="node-label">暗夜密信</span>
+                </div>
+                <div class="step-node" id="node-2">
+                    <div class="node-circle">二</div>
+                    <span class="node-label">鴻門席間</span>
+                </div>
+                <div class="step-node" id="node-3">
+                    <div class="node-circle">三</div>
+                    <span class="node-label">帳外闖營</span>
+                </div>
+                <div class="step-node" id="node-4">
+                    <div class="node-circle">四</div>
+                    <span class="node-label">驪山捷徑</span>
+                </div>
+                <div class="step-node" id="node-5">
+                    <div class="node-circle">五</div>
+                    <span class="node-label">玉斗之碎</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Stage Card -->
+        <main class="stage-card" id="stageCard">
+            <div>
+                <div class="stage-header">
+                    <span class="stage-tag" id="stageTag">STAGE 01 / 05</span>
+                    <h2 class="stage-title" id="stageTitle">【第一關：暗夜密信】殺機初現</h2>
+                </div>
+
+                <div class="story-box" id="storyBox">
+                    【情境】公元前 206 年，楚軍大將項羽率四十萬大軍屯駐鴻門，意圖消滅先入咸陽的沛公劉邦（僅十萬軍）。沛公左司馬曹無傷暗中派人向項羽告密：「沛公欲王關中，使子嬰為相，珍寶盡有之。」亞父范增亦勸項羽火速出擊！危急之際，項羽之叔父項伯連夜騎馬前往沛公大營，密告好友張良...
+                </div>
+
+                <!-- Custom Interactive Seating Widget for Stage 2 (Hidden by default) -->
+                <div class="seating-map-widget" id="seatingWidget" style="display: none;">
+                    <div class="compass-header">古代宴飲尊卑座次圖（請點擊選擇「項羽」應坐的位置）</div>
+                    <div class="table-grid">
+                        <!-- North -->
+                        <div class="seat-slot seat-north" onclick="selectSeat('南', '面南坐（亞父范增）')">
+                            <span>面南坐</span>
+                            <span id="seat-north-label">（點擊）</span>
+                        </div>
+                        <!-- West -->
+                        <div class="seat-slot seat-west" onclick="selectSeat('西', '面西侍（張良）')">
+                            <span>面西侍</span>
+                            <span id="seat-west-label">（點擊）</span>
+                        </div>
+                        <!-- Center Table -->
+                        <div class="table-center">鴻門盛宴</div>
+                        <!-- East -->
+                        <div class="seat-slot seat-east" onclick="selectSeat('東', '面東坐（最尊位）')">
+                            <span>面東坐</span>
+                            <span id="seat-east-label">（點擊）</span>
+                        </div>
+                        <!-- South -->
+                        <div class="seat-slot seat-south" onclick="selectSeat('北', '面北坐（沛公劉邦）')">
+                            <span>面北坐</span>
+                            <span id="seat-south-label">（點擊）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-text" id="questionText">
+                        題目加載中...
+                    </div>
+
+                    <div class="options-grid" id="optionsGrid">
+                        <!-- Options filled dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="stage-actions">
+                <button class="hint-btn" onclick="showHint()">
+                    <span>💡</span> 錦囊求助
+                </button>
+                <button class="submit-btn" id="submitBtn" onclick="submitAnswer()" disabled>
+                    驗證破解 ➔
+                </button>
+            </div>
+        </main>
+
+        <!-- Final Settlement Screen (Hidden initially) -->
+        <div class="certificate-container" id="certContainer">
+            <h2 class="cert-header">鴻門密室大通關</h2>
+            <p class="cert-sub">高中國文〈鴻門宴〉智謀與文學解謎結算網頁</p>
+            <div class="cert-name" id="certStudentName">智勇雙全之學子</div>
+            <div>
+                <span class="cert-badge" id="certTitleBadge">漢業締造者 · 鴻門智聖</span>
+            </div>
+            <div class="cert-score-box">
+                <div class="cert-score-item">
+                    <div class="val" id="finalScoreVal">100</div>
+                    <div class="lbl">最終智謀值</div>
+                </div>
+                <div class="cert-score-item">
+                    <div class="val" id="finalTimeVal">03:45</div>
+                    <div class="lbl">總通關耗時</div>
+                </div>
+                <div class="cert-score-item">
+                    <div class="val" id="finalAccuracyVal">100%</div>
+                    <div class="lbl">答題正確率</div>
+                </div>
+            </div>
+            <p style="color: var(--muted-text); margin-bottom: 25px; line-height: 1.6;">
+                「豎子不足與謀！奪項王天下者必沛公也。」<br>
+                恭喜你展現了如張良般的深謀遠慮、樊噲般的勇猛豪情，成功於鴻門夜宴中化險為夷！
+            </p>
+            <button class="restart-btn" onclick="location.reload()">↺ 重新挑戰密室網頁</button>
+        </div>
+    </div>
+
+    <!-- Explanation & Hint Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <h3 class="modal-title" id="modalTitle">💡 錦囊提示</h3>
+            <div class="modal-content" id="modalContent">
+                內容加載中...
+            </div>
+            <button class="close-modal-btn" onclick="closeModal()">了解關閉</button>
+        </div>
+    </div>
+
+    <!-- Start Welcome Modal -->
+    <div class="modal-overlay active" id="welcomeModal">
+        <div class="modal-card" style="text-align: center;">
+            <h2 style="color: var(--gold-primary); font-size: 1.8rem; margin-bottom: 12px;">【鴻門夜宴】歷史密室網頁</h2>
+            <p style="color: var(--muted-text); margin-bottom: 20px; line-height: 1.6;">
+                歡迎來到司馬遷《史記·項羽本紀》名篇〈鴻門宴〉互動解謎網頁！<br>
+                項羽四十萬楚軍壓境，范增殺機四伏。你將扮演張良與劉邦陣營的智囊，破解五大歷史密室關卡！
+            </p>
+            <div style="margin-bottom: 20px; text-align: left;">
+                <label style="display: block; color: var(--gold-light); margin-bottom: 8px; font-weight: bold;">請輸入挑戰者姓名/稱號：</label>
+                <input type="text" id="studentNameInput" value="項王客卿" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold-primary); background: #0a0912; color: #fff; font-size: 1rem;">
+            </div>
+            <button class="submit-btn" style="width: 100%;" onclick="startGame()">開啟密室逃脫網頁 ➔</button>
+        </div>
+    </div>
+
+    <script>
+        /* ----------------------------------------------------
+           1. Web Audio API Sound Generator (Zero External Assets)
+           ---------------------------------------------------- */
+        let audioEnabled = true;
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('audioToggle');
+            btn.innerHTML = audioEnabled ? '<span>🔊</span> 音效: 開' : '<span>🔇</span> 音效: 關';
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                const now = ctx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.setValueAtTime(174.61, now + 0.15);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'sword') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(1200, now);
+                    osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+                    gain.gain.setValueAtTime(0.4, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'victory') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const o = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.value = freq;
+                        o.connect(g);
+                        g.connect(ctx.destination);
+                        g.gain.setValueAtTime(0.2, now + idx * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.6);
+                        o.start(now + idx * 0.1);
+                        o.stop(now + idx * 0.1 + 0.6);
+                    });
+                }
+            } catch (e) { console.log("Audio Error", e); }
+        }
+
+        /* ----------------------------------------------------
+           2. Particle Canvas Background (Floating Embers)
+           ---------------------------------------------------- */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 3 + 1;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.6;
+                this.alpha = Math.random() * 0.7 + 0.3;
+                this.color = Math.random() > 0.4 ? '#dfb15b' : '#d93838';
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.alpha -= 0.003;
+                if (this.y < -10 || this.alpha <= 0) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 45; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        /* ----------------------------------------------------
+           3. Game Data & Questions (15 Questions, 5 Stages)
+           ---------------------------------------------------- */
+        const gameStages = [
+            {
+                id: 1,
+                title: "【第一關：暗夜密信】殺機初現",
+                tag: "STAGE 01 / 05",
+                story: "【情境】公元前 206 年，楚軍大將項羽率四十萬大軍屯駐鴻門，意圖消滅先入咸陽的沛公劉邦（僅十萬軍）。沛公左司馬曹無傷暗中派人向項羽告密：「沛公欲王關中，使子嬰為相，珍寶盡有之。」亞父范增亦勸項羽火速出擊！危急之際，項羽之叔父項伯連夜騎馬前往沛公大營，密告好友張良...",
+                questions: [
+                    {
+                        text: "范增勸項羽曰：「沛公居山東時，貪於財貨，好美姬。今入關，財物無所取，婦女無所幸，此其志不在小。吾令人望其氣，皆為龍虎，成五采，此天子氣也。急擊勿失！」文中「此其志不在小」的意思是？",
+                        options: [
+                            "A. 劉邦志向狹小，不足為懼",
+                            "B. 劉邦野心極大，有圖謀天下的宏遠志向",
+                            "C. 劉邦只貪圖小利，不重視大局發展",
+                            "D. 劉邦在山東時胸無大志，入關後性格大變"
+                        ],
+                        correct: 1,
+                        hint: "「不在小」意即「不小」，說明劉邦不滿足於小小的關中或財色，而是有更大（統治天下）的野心。",
+                        explanation: "【解析】范增觀察劉邦入關後的反常行為（不取財物、不親婦女），判斷劉邦「志不在小」（野心不在小處，亦即圖謀天下），故建議項羽火速進擊。",
+                        translation: "【課文語譯】范增說：「沛公居住在崤山以東時，貪圖財貨，喜歡美女。如今進入關中，財物不據為己有，婦女不親近撫幸，這說明他的志向不在小處！」"
+                    },
+                    {
+                        text: "張良夜見項伯，項伯告以楚軍即將攻打，並曰：「旦日不可不蚤自來謝項王！」句中「蚤」字通假何字？",
+                        options: [
+                            "A. 跳「蚤」",
+                            "B. 「早」晨／儘早",
+                            "C. 「爪」子",
+                            "D. 「找」尋"
+                        ],
+                        correct: 1,
+                        hint: "古字「蚤」常借用為時間上的早晚之「早」。",
+                        explanation: "【解析】「蚤」通「早」，句意為明日清晨應儘早親自前來向項王謝罪賠禮。",
+                        translation: "【課文語譯】項伯說：「明天早晨不可以不親自前來向項王謝罪！」"
+                    },
+                    {
+                        text: "「沛公欲王關中，使子嬰為相」句中「王」字的詞性與讀音為何？",
+                        options: [
+                            "A. 名詞，讀 ㄨㄤˊ，指君王",
+                            "B. 動詞，讀 ㄨㄤˋ，指稱王、統治",
+                            "C. 形容詞，讀 ㄨㄤˊ，指偉大的",
+                            "D. 副詞，讀 ㄨㄤˋ，指旺盛地"
+                        ],
+                        correct: 1,
+                        hint: "此處為文言文的「詞性活用」，由原本指稱君王的名詞轉變為表示動作的動詞。",
+                        explanation: "【解析】「王」在此處由名詞活用為動詞，讀作 ㄨㄤˋ (wàng)，意為「稱王、統治關中地區」。",
+                        translation: "【課文語譯】沛公想要在關中稱王，讓子嬰擔任丞相..."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "【第二關：鴻門席間】玉玦三舉",
+                tag: "STAGE 02 / 05",
+                story: "【情境】沛公劉邦帶領張良、樊噲及百餘騎兵親至鴻門向項羽謝罪。項羽大喜，留沛共同飲。宴席之上杯光盃影，卻殺機四伏！范增數目項王，舉所佩玉玦以示之者三，項王默然不應...",
+                hasSeatingMap: true,
+                questions: [
+                    {
+                        text: "古代室內宴飲以「東向」（坐西朝東）為最尊貴的席位。鴻門宴中，「項王、項伯面東坐；亞父面南坐；沛公面北坐；張良面西侍。」請問席間座次尊卑最高與最低分別是誰？（請點擊下方座次圖選擇尊位）",
+                        options: [
+                            "A. 最高：項羽（面東坐）；最低：張良（面西侍）",
+                            "B. 最高：范增（面南坐）；最低：劉邦（面北坐）",
+                            "C. 最高：項伯（面東坐）；最低：沛公（面北坐）",
+                            "D. 最高：劉邦（面北坐）；最低：張良（面西侍）"
+                        ],
+                        correct: 0,
+                        hint: "座次尊卑：東向（最尊） > 南向（次尊） > 北向（卑） > 西向（侍坐，最低）。",
+                        explanation: "【解析】項羽、項伯面東坐（坐西朝東，為最尊貴的首席）；亞父面南坐（次尊）；沛公面北坐（臣服卑位）；張良面西侍（侍坐，地位最低）。這顯示項羽以霸主自居，將劉邦視為臣屬。",
+                        translation: "【課文座次】項王、項伯面向東坐；亞父范增面向南坐；沛公面向北坐；張良面向西陪侍。"
+                    },
+                    {
+                        text: "范增數目項王，舉所佩「玉玦」以示之者三。「玉玦」在古禮象徵意涵中代表何意？范增以此暗示項羽什麼？",
+                        options: [
+                            "A. 代表圓滿，暗示項羽應與劉邦講和結盟",
+                            "B. 代表決斷，暗示項羽應果斷下定決心殺死劉邦",
+                            "C. 代表訣別，暗示范增將離開楚軍陣營",
+                            "D. 代表富貴，作為餽贈劉邦的禮品"
+                        ],
+                        correct: 1,
+                        hint: "「玦」與「決」同音，古人佩玦象徵遇事能果決不猶豫。",
+                        explanation: "【解析】「玦」為環形有缺口的玉器，與「決」同音。范增三次舉玉玦暗示項羽痛下決心、果斷斬殺劉邦。",
+                        translation: "【課文語譯】范增多次給項王使眼色，三度舉起所佩帶的玉玦向項王示意（下殺手）。"
+                    },
+                    {
+                        text: "「沛公奉宬酒為壽，約為婚姻。」句中的「婚姻」在文中的意思與現代有何差異？",
+                        options: [
+                            "A. 古今意思完全相同，指劉邦與項伯兩人結婚",
+                            "B. 古代指「兩家結為兒女親家／姻親關係」",
+                            "C. 古代指共同經營商業夥伴關係",
+                            "D. 古代指結拜為異姓兄弟"
+                        ],
+                        correct: 1,
+                        hint: "古代「婚」指男家，「姻」指女家，合稱表示兩姓聯姻。",
+                        explanation: "【解析】古今異義詞！古代「婚姻」指結為兒女親家。劉邦為了拉攏項伯保護自己，約定讓彼此的子女締結婚姻。",
+                        translation: "【課文語譯】沛公奉上酒杯向項伯敬酒祝壽，並約定結為兒女親家。"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "【第三關：帳外闖營】生彘豪言",
+                tag: "STAGE 03 / 05",
+                story: "【情境】范增見項羽猶豫不決，乃出召項莊曰：「君王為人不忍。若入前為壽，壽畢，請以劍舞，因擊沛公於坐，殺之！」項莊拔劍起舞，項伯亦拔劍起舞，常以身翼蔽沛公。張良至軍門召樊噲。樊噲帶劍擁盾闖入帳中，怒視項羽！",
+                questions: [
+                    {
+                        text: "「項莊拔劍起舞，項伯亦拔劍起舞，常以身翼蔽沛公。」後人引申成語「項莊舞劍，意在沛公」，其比喻意為何？",
+                        options: [
+                            "A. 表面上表演舞蹈，實際上是展現高超劍藝",
+                            "B. 表面上是在做某件事，暗中卻另有企圖或針對特定目標",
+                            "C. 兄弟之間情深義重，共同維護宴會秩序與安全",
+                            "D. 說明項莊武藝不如項伯，場面十分尷尬"
+                        ],
+                        correct: 1,
+                        hint: "舞劍是表面形式，真正的目的是要刺殺沛公。",
+                        explanation: "【解析】「項莊舞劍，意在沛公」原指項莊假借舞劍助興，實際尋機刺殺劉邦；後比喻言行表面上有一套掩飾的理由，暗中別有所圖。",
+                        translation: "【課文語譯】項莊拔劍起舞，項伯也拔劍起舞，常常用自己的身體像翅膀一樣掩護沛公。"
+                    },
+                    {
+                        text: "樊噲帶劍擁盾闖入軍門，衛士欲止之，宬盾撞倒衛士入帳。項王按劍而「跽」。「跽」這種古代姿態代表項羽何種心態？",
+                        options: [
+                            "A. 雙腳伸直，表示極度鬆弛與不屑",
+                            "B. 雙膝著地，挺直上身，表示驚警戒備、隨時準備起立應變",
+                            "C. 盤腿而坐，表示誠心歡迎來客",
+                            "D. 蹲在地上，表示極度恐懼"
+                        ],
+                        correct: 1,
+                        hint: "「跽」（ㄐㄧˋ）是跪坐時挺直腰骨，是一種隨時準備站起迎敵的戒備動作。",
+                        explanation: "【解析】「跽」是跪坐時將上身挺直。項羽見勇士樊噲怒目闖入，按劍而跽，展現出對強者的警覺與戒備。",
+                        translation: "【課文語譯】項王握著劍柄挺直上身（戒備著），問道：「客是什麼人？」"
+                    },
+                    {
+                        text: "樊噲對項羽大膽直言：「臣死且不避，宬酒安足辭！夫秦王有虎狼之心...今沛公先破秦入咸陽...勞苦功高，未有封侯之賞，而聽細說，欲誅有功之人，此亡秦之續耳！」樊噲這番話的說服策略是什麼？",
+                        options: [
+                            "A. 哀求項羽手下留情，展現弱者姿態以求饒命",
+                            "B. 以「大義名分」與「亡秦教訓」痛陳聽信讒言之危，既讚項羽應有天下之度，又直指其錯",
+                            "C. 威脅項羽若殺劉邦，霸上十萬大軍將立刻進攻鴻門",
+                            "D. 嘲笑楚軍武藝平庸，無法抵擋漢軍精銳"
+                        ],
+                        correct: 1,
+                        hint: "樊噲豪氣干雲，切生彘肩而食，慷慨陳詞，從秦朝暴政講到劉邦有功無賞，切中項羽自許英雄的性格。",
+                        explanation: "【解析】樊噲大義凜然，從秦朝暴政滅亡的教訓講起，指出劉邦先入關「勞苦功高」，項羽若聽信讒言誅殺有功之人乃是「亡秦之續」（重複秦朝滅亡的道路），成功打動並折服了重英雄氣概的項羽。",
+                        translation: "【課文語譯】樊噲說：「我連死都不怕，一杯酒哪裡值得推辭！秦王有虎狼般殘忍的心...如今沛公先破秦入咸陽，勞苦功高，卻沒得到封侯賞賜，反而聽信小人讒言想誅殺有功之人，這是重蹈秦朝滅亡的覆轍啊！」"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "【第四關：驪山捷徑】脫身小道",
+                tag: "STAGE 04 / 05",
+                story: "【情境】項羽被樊噲的豪言壯語折服，賜坐。宴席氣氛暫時緩和，但殺機未泯。沛公起如廁，因招樊噲、夏侯嬰、靳強、紀信等四人從小道脫身，逃歸霸上大營。張良則留於營中代為謝罪與獻禮...",
+                questions: [
+                    {
+                        text: "劉邦從小道逃走前對張良說：「從此道至吾軍，不過二十里耳。持沛公至軍，盡我饌。」劉邦這樣精確計算時間與路線的原因是？",
+                        options: [
+                            "A. 劉邦膽怯丟下部屬獨自逃跑，急著回營休息",
+                            "B. 計算項羽與范增發現的時間差，確保自己安全回到霸上大營後，張良才進帳奉獻禮物",
+                            "C. 讓張良替自己向項羽宣佈投降",
+                            "D. 因為從小道走比較近，想趕回去吃晚飯"
+                        ],
+                        correct: 1,
+                        hint: "劉邦估算二十里山路走完約需半刻時間，張良稍後進帳時，劉邦早已回到安全大營，楚軍追之不及。",
+                        explanation: "【解析】劉邦精明果斷，計算從小道回霸上僅二十里，預估自己安全回到大營後張良再進帳謝罪獻禮，使項羽追擊不及，展現劉邦高明的危機處理能力。",
+                        translation: "【課文語譯】沛公說：「從這條小道到我們軍營，不過二十里罷了。估計我到了軍營，你再進去（獻禮）。」"
+                    },
+                    {
+                        text: "〈鴻門宴〉塑造了鮮明對比的人物形象。下列人物性格的描述，何者【最不正確】？",
+                        options: [
+                            "A. 項羽：優柔寡斷、剛愎自用、重英雄氣概而缺乏政治遠見",
+                            "B. 劉邦：能屈能伸、虛心聽諫、機智果斷且善於拉攏人心",
+                            "C. 范增：深謀遠慮、目光敏銳，但急躁憤怒、無法勸諫項羽",
+                            "D. 張良：魯莽衝動、嗜殺成性，全憑個人武力解決問題"
+                        ],
+                        correct: 3,
+                        hint: "張良是漢初三傑之一，足智多謀、鎮定沉著、處事圓融。",
+                        explanation: "【解析】張良性格足智多謀、深謀遠慮、鎮定沉著；「魯莽衝動、嗜殺成性」絕對不是張良的特質。",
+                        translation: "【人物評析】張良運籌帷幄之中，決勝千里之外，為劉邦身邊最核心的首席謀士。"
+                    },
+                    {
+                        text: "「沛公居山東時，貪於財貨」句中的「山東」指的是哪裡？",
+                        options: [
+                            "A. 今山東省全境",
+                            "B. 崤山（或函谷關、太行山）以東的廣大地區",
+                            "C. 泰山以東地區",
+                            "D. 華山以東的江南水鄉"
+                        ],
+                        correct: 1,
+                        hint: "古今異義詞！古代地理上的「山東」通常指爻山或函谷關以東地區。",
+                        explanation: "【解析】古今異義詞！古代地理概念中，「山東」指崤山（或函谷關）以東地區；現代則指山東省。",
+                        translation: "【課文語譯】沛公居住在崤山以東時..."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "【第五關：玉斗之碎】終章與誅叛",
+                tag: "STAGE 05 / 05",
+                story: "【情境】張良入謝，獻白璧一雙於項王，玉斗一雙於亞父。項王受璧，置之坐上。亞父受玉斗，置之地，拔劍撞而破之，仰天長嘆！劉邦安全至軍後，第一件事即立誅曹無傷...",
+                questions: [
+                    {
+                        text: "范增受玉斗後，拔劍撞而破之，曰：「豎子不足與謀！奪項王天下者必沛公也。吾屬今為之虜矣！」范增怒罵「豎子」是指誰？",
+                        options: [
+                            "A. 劉邦",
+                            "B. 張良",
+                            "C. 項莊與項伯",
+                            "D. 項羽"
+                        ],
+                        correct: 3,
+                        hint: "「豎子」意為小子、缺乏遠見的傢伙，范增痛心於君王不聽勸諫、錯失良機。",
+                        explanation: "【解析】范增極度憤怒痛心，罵項羽「豎子」（小子、缺乏遠見的傢伙），預言項羽的天下終將被劉邦奪去，楚軍眾人終將成為劉邦的階下囚。",
+                        translation: "【課文語譯】范增說：「小子不值得和他共謀大事！奪取項王天下的一定是沛公。我們這些人今天都要成為他的階下囚了！」"
+                    },
+                    {
+                        text: "劉邦回到霸上大營後，「立誅殺曹無傷」。劉邦此舉展現何種政治手腕與意圖？",
+                        options: [
+                            "A. 殺一儆百，迅速清理內部叛徒與告密者，嚴密鞏固領導權",
+                            "B. 為了報復項羽在鴻門宴上的威脅",
+                            "C. 中了范增的離間計，誤殺功臣",
+                            "D. 隨意發洩在鴻門宴受到的屈辱與恐懼"
+                        ],
+                        correct: 0,
+                        hint: "曹無傷是當初向項羽告密之人。劉邦安全歸營後立刻執行肅清。",
+                        explanation: "【解析】劉邦一回到霸上大營，第一件事就是立刻處決內奸告密者曹無傷，展現其果斷肅清叛徒、嚴密控制軍隊的政治領導手腕。",
+                        translation: "【課文語譯】沛公回到軍中，立刻誅殺了左司馬曹無傷。"
+                    },
+                    {
+                        text: "司馬遷《史記·項羽本紀》中的〈鴻門宴〉名垂千古。下列出自〈鴻門宴〉本文的經典成語與名句組合，何者【完全正確】？",
+                        options: [
+                            "A. 項莊舞劍意在沛公／勞苦功高／豎子不足與謀／人為刀俎我為魚肉",
+                            "B. 四面楚歌／破釜沉舟／鴻門夜宴／破竹之勢",
+                            "C. 約法三章／漢賊不兩立／游刃有餘／項莊舞劍",
+                            "D. 背水一戰／指鹿為馬／風聲鶴唳／人為刀俎"
+                        ],
+                        correct: 0,
+                        hint: "選項 A 中的四組名句皆直接出自〈鴻門宴〉文中。",
+                        explanation: "【解析】「項莊舞劍，意在沛公」、「勞苦功高」、「豎子不足與謀」、「人為刀俎，我為魚肉」（樊噲語）皆直接出自〈鴻門宴〉課文。",
+                        translation: "【歷史影響】〈鴻門宴〉精彩記錄了楚漢相爭關鍵轉折，為中國文學史上的對話與場面描寫巔峰之作。"
+                    }
+                ]
+            }
+        ];
+
+        /* ----------------------------------------------------
+           4. Game State & Logic Management
+           ---------------------------------------------------- */
+        let currentStageIdx = 0;
+        let currentQuestionIdx = 0;
+        let selectedOptionIdx = null;
+        let score = 100;
+        let secondsElapsed = 0;
+        let timerTimer = null;
+        let studentName = "項王客卿";
+        let correctAnswersCount = 0;
+        let totalQuestionsAnswered = 0;
+
+        function startGame() {
+            const nameIn = document.getElementById('studentNameInput').value.trim();
+            if (nameIn) studentName = nameIn;
+            document.getElementById('welcomeModal').classList.remove('active');
+            
+            getAudioContext();
+            playSound('click');
+
+            // Start Timer
+            secondsElapsed = 0;
+            if (timerTimer) clearInterval(timerTimer);
+            timerTimer = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timerVal').innerText = `${mins}:${secs}`;
+            }, 1000);
+
+            renderStage();
+        }
+
+        function renderStage() {
+            const stage = gameStages[currentStageIdx];
+            const q = stage.questions[currentQuestionIdx];
+
+            // Progress Fill
+            const progressPercent = (currentStageIdx / (gameStages.length - 1)) * 100;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+
+            // Step Nodes
+            for (let i = 1; i <= 5; i++) {
+                const node = document.getElementById(`node-${i}`);
+                node.classList.remove('active', 'completed');
+                if (i - 1 === currentStageIdx) node.classList.add('active');
+                else if (i - 1 < currentStageIdx) node.classList.add('completed');
+            }
+
+            // Headers & Story
+            document.getElementById('stageTag').innerText = `${stage.tag} · 第 ${currentQuestionIdx + 1} / ${stage.questions.length} 題`;
+            document.getElementById('stageTitle').innerText = stage.title;
+            document.getElementById('storyBox').innerText = stage.story;
+
+            // Seating Widget (Stage 2 special element)
+            const seatingWidget = document.getElementById('seatingWidget');
+            if (stage.hasSeatingMap && currentQuestionIdx === 0) {
+                seatingWidget.style.display = 'flex';
+            } else {
+                seatingWidget.style.display = 'none';
+            }
+
+            // Render Question Text
+            document.getElementById('questionText').innerText = q.text;
+
+            // Render Options Grid
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            selectedOptionIdx = null;
+            document.getElementById('submitBtn').disabled = true;
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.onclick = () => selectOption(idx);
+                
+                const keySpan = document.createElement('span');
+                keySpan.className = 'option-key';
+                keySpan.innerText = String.fromCharCode(65 + idx);
+
+                const textSpan = document.createElement('span');
+                textSpan.innerText = optText.substring(3); // strip "A. "
+
+                btn.appendChild(keySpan);
+                btn.appendChild(textSpan);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function selectOption(idx) {
+            playSound('click');
+            selectedOptionIdx = idx;
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach((btn, i) => {
+                if (i === idx) btn.classList.add('selected');
+                else btn.classList.remove('selected');
+            });
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function selectSeat(direction, label) {
+            playSound('click');
+            // If East (東), that corresponds to option 0
+            if (direction === '東') {
+                selectOption(0);
+            } else if (direction === '南') {
+                selectOption(1);
+            } else if (direction === '北') {
+                selectOption(2);
+            } else if (direction === '西') {
+                selectOption(3);
+            }
+
+            // Visual feedback on seat
+            document.querySelectorAll('.seat-slot').forEach(s => s.classList.remove('active-seat'));
+            if (direction === '南') document.querySelector('.seat-north').classList.add('active-seat');
+            if (direction === '西') document.querySelector('.seat-west').classList.add('active-seat');
+            if (direction === '東') document.querySelector('.seat-east').classList.add('active-seat');
+            if (direction === '北') document.querySelector('.seat-south').classList.add('active-seat');
+        }
+
+        function submitAnswer() {
+            if (selectedOptionIdx === null) return;
+
+            const stage = gameStages[currentStageIdx];
+            const q = stage.questions[currentQuestionIdx];
+            const isCorrect = (selectedOptionIdx === q.correct);
+
+            totalQuestionsAnswered++;
+            const buttons = document.querySelectorAll('.option-btn');
+
+            buttons.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === q.correct) btn.classList.add('correct');
+                if (i === selectedOptionIdx && !isCorrect) btn.classList.add('wrong');
+            });
+
+            if (isCorrect) {
+                playSound('correct');
+                correctAnswersCount++;
+                score += 15;
+            } else {
+                playSound('wrong');
+                score = Math.max(0, score - 10);
+            }
+
+            document.getElementById('scoreVal').innerText = score;
+
+            // Show Detailed Explanation Modal
+            setTimeout(() => {
+                showExplanationModal(isCorrect, q);
+            }, 600);
+        }
+
+        function showExplanationModal(isCorrect, q) {
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+
+            if (isCorrect) {
+                modalTitle.innerHTML = `<span style="color: #2ecc71;">✓ 機關解鎖成功！</span>`;
+            } else {
+                modalTitle.innerHTML = `<span style="color: var(--crimson-bright);">✗ 觸發陷阱！智謀扣減</span>`;
+            }
+
+            modalContent.innerHTML = `
+                <div style="margin-bottom: 12px; font-weight: bold; color: ${isCorrect ? '#2ecc71' : 'var(--crimson-bright)'}">
+                    ${isCorrect ? '破解正確！掌握歷史關鍵筆法。' : '破解失敗！請查看下方課文詳析與譯文對照：'}
+                </div>
+                <div>${q.explanation}</div>
+                <div class="quote-box">${q.translation}</div>
+            `;
+
+            document.getElementById('modalOverlay').classList.add('active');
+
+            // Setup button action to move to next question/stage
+            const closeBtn = document.querySelector('.close-modal-btn');
+            closeBtn.onclick = () => {
+                closeModal();
+                advanceGame();
+            };
+        }
+
+        function advanceGame() {
+            const stage = gameStages[currentStageIdx];
+            if (currentQuestionIdx < stage.questions.length - 1) {
+                currentQuestionIdx++;
+                renderStage();
+            } else if (currentStageIdx < gameStages.length - 1) {
+                currentStageIdx++;
+                currentQuestionIdx = 0;
+                playSound('sword');
+                renderStage();
+            } else {
+                finishGame();
+            }
+        }
+
+        function showHint() {
+            playSound('click');
+            score = Math.max(0, score - 5);
+            document.getElementById('scoreVal').innerText = score;
+
+            const q = gameStages[currentStageIdx].questions[currentQuestionIdx];
+            document.getElementById('modalTitle').innerHTML = `<span>💡 錦囊提示 (扣 5 智謀值)</span>`;
+            document.getElementById('modalContent').innerHTML = `
+                <div style="line-height: 1.8; color: var(--gold-light);">
+                    ${q.hint}
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+
+            const closeBtn = document.querySelector('.close-modal-btn');
+            closeBtn.onclick = closeModal;
+        }
+
+        function closeModal() {
+            playSound('click');
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function finishGame() {
+            if (timerTimer) clearInterval(timerTimer);
+            playSound('victory');
+
+            document.getElementById('stageCard').style.display = 'none';
+            document.getElementById('certContainer').style.display = 'block';
+
+            document.getElementById('certStudentName').innerText = studentName;
+            document.getElementById('finalScoreVal').innerText = score;
+            
+            const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            document.getElementById('finalTimeVal').innerText = `${mins}:${secs}`;
+
+            const accuracy = Math.round((correctAnswersCount / totalQuestionsAnswered) * 100) || 100;
+            document.getElementById('finalAccuracyVal').innerText = `${accuracy}%`;
+
+            // Assign Title based on score
+            const badge = document.getElementById('certTitleBadge');
+            if (score >= 150) {
+                badge.innerText = '漢業締造者 · 鴻門智聖';
+            } else if (score >= 110) {
+                badge.innerText = '運籌帷幄 · 隨機應變奇士';
+            } else {
+                badge.innerText = '安然脫身 · 鴻門生還者';
+            }
+        }
+    </script>
+</body>
+</html>
