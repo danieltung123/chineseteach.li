@@ -907,13 +907,14 @@
         </div>
     </header>
 
-    <!-- 導覽頁籤 Navbar (圖示更換為非葉子圖示) -->
+    <!-- 導覽頁籤 Navbar -->
     <nav class="sticky-nav">
         <div class="nav-inner">
             <button class="nav-btn active" onclick="scrollToSection('unit1')"><i class="fa-solid fa-palette"></i> 單元一：經典色彩字詞大全</button>
             <button class="nav-btn" onclick="scrollToSection('unit2')"><i class="fa-solid fa-masks-theater"></i> 單元二：色彩詞借代與延伸義</button>
-            <button class="nav-btn" onclick="scrollToSection('unit3')"><i class="fa-solid fa-compass"></i> 單元三：觀念判讀解密</button>
-            <button class="nav-btn" onclick="scrollToSection('unit4')"><i class="fa-solid fa-pen-nib"></i> 單元四：課堂綜合檢測</button>
+            <button class="nav-btn" onclick="scrollToSection('unit3')"><i class="fa-solid fa-book-bookmark"></i> 單元三：常用色彩成語辨析</button>
+            <button class="nav-btn" onclick="scrollToSection('unit4')"><i class="fa-solid fa-compass"></i> 單元四：觀念判讀解密</button>
+            <button class="nav-btn" onclick="scrollToSection('unit5')"><i class="fa-solid fa-pen-nib"></i> 單元五：課堂綜合檢測</button>
         </div>
     </nav>
 
@@ -1469,6 +1470,292 @@
                 <div class="section-title-wrap">
                     <div class="section-num">三</div>
                     <div>
+                        <h2 class="section-title">常用色彩成語語義辨析（18組經典成語）</h2>
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #78909c;"></i>
+                    <input type="text" id="idiom-search" placeholder="搜尋色彩成語（如：白頭偕老、青黃不接...）" oninput="filterIdioms()">
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
+                <div class="idiom-color-filter" style="display:flex; flex-wrap:wrap; gap:8px;">
+                    <button class="metaphor-btn idiom-filter-btn active" data-color="all" onclick="filterIdiomColor('all')">全部成語 (18)</button>
+                    <button class="metaphor-btn idiom-filter-btn" data-color="red" onclick="filterIdiomColor('red')">🔴 紅赤紫系</button>
+                    <button class="metaphor-btn idiom-filter-btn" data-color="green" onclick="filterIdiomColor('green')">🟢 青綠藍系</button>
+                    <button class="metaphor-btn idiom-filter-btn" data-color="white" onclick="filterIdiomColor('white')">⚪ 白灰系</button>
+                    <button class="metaphor-btn idiom-filter-btn" data-color="yellow" onclick="filterIdiomColor('yellow')">🟡 黃色系</button>
+                    <button class="metaphor-btn idiom-filter-btn" data-color="black" onclick="filterIdiomColor('black')">⬛ 黑色系</button>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-action" style="padding:6px 12px; font-size:0.85rem;" onclick="toggleAllIdiomDefs(true)"><i class="fa-solid fa-eye"></i> 全部顯示釋義</button>
+                    <button class="btn-action btn-reset" style="padding:6px 12px; font-size:0.85rem;" onclick="toggleAllIdiomDefs(false)"><i class="fa-solid fa-eye-slash"></i> 全部遮蔽（自測模式）</button>
+                </div>
+            </div>
+
+            <div class="metaphor-grid" id="idiom-grid">
+                <!-- 1. 白頭偕老 -->
+                <div class="metaphor-card idiom-card" data-colors="white" data-keywords="白頭偕老 夫妻 白頭 偕老">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-heart" style="color:#e53935;"></i> 白頭偕老
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄅㄞˊ ㄊㄡˊ ㄒㄧㄝˊ ㄌㄠˇ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「白」（白色頭髮）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>白頭：頭髮變白；偕：共同。形容夫妻情深意重，共同相守生活直到年老白髮。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>祝這對新婚夫婦永結同心、白頭偕老。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 2. 花紅柳綠 -->
+                <div class="metaphor-card idiom-card" data-colors="red green" data-keywords="花紅柳綠 花 紅 柳 綠 春景">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-seedling" style="color:#2e7d32;"></i> 花紅柳綠
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄏㄨㄚ ㄏㄨㄥˊ ㄌㄧㄡˇ ㄌㄩˋ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「紅」（紅色）、「綠」（綠色）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>形容花木繁茂、色彩鮮豔迷人的春日景色；亦可用於形容服飾華麗多彩。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>陽春三月，公園裡花紅柳綠，令人心曠神怡。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 3. 萬紫千紅 -->
+                <div class="metaphor-card idiom-card" data-colors="red" data-keywords="萬紫千紅 紫 紅 繁榮 盛開">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-spa" style="color:#8e24aa;"></i> 萬紫千紅
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄨㄢˋ ㄗˇ ㄑㄧㄢ ㄏㄨㄥˊ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「紫」（紫色）、「紅」（紅色）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>形容百花盛開、色彩繽紛繁茂的景象；亦比喻事物繁榮興旺、百花齊放的景象。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>春天到了，花園裡呈現出一片萬紫千紅的勃勃生機。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 4. 明眸皓齒 -->
+                <div class="metaphor-card idiom-card" data-colors="white" data-keywords="明眸皓齒 明眸 皓齒 潔白 容貌">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-face-smile" style="color:#0288d1;"></i> 明眸皓齒
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄇㄧㄥˊ ㄇㄡˊ ㄏㄠˋ ㄔˇ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「皓」（潔白貌）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>明亮的眼睛，潔白的牙齒。形容女子容貌清秀姣好或年輕人容光煥發。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>台上那位女主持人明眸皓齒、清麗脫俗。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 5. 青面獠牙 -->
+                <div class="metaphor-card idiom-card" data-colors="green black" data-keywords="青面獠牙 青 鬼怪 猙獰">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-ghost" style="color:#388e3c;"></i> 青面獠牙
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄑㄧㄥ ㄇㄧㄢˋ ㄌㄧㄠˊ ㄧㄚˊ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「青」（青黑色/深綠黑）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>臉色青黑，嘴裡長出長尖牙。形容鬼怪或凶惡之人面貌極其猙獰恐怖。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>廟宇壁畫上畫著許多青面獠牙的夜叉，模樣相當威嚇。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 6. 赤貧如洗 -->
+                <div class="metaphor-card idiom-card" data-colors="red" data-keywords="赤貧如洗 赤 貧窮 極度">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-coins" style="color:#d32f2f;"></i> 赤貧如洗
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄔˋ ㄆㄧㄣˊ ㄖㄨˊ ㄒㄧˇ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「赤」（極度、空無一物）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>赤：極度、空無。窮得像被水洗過一樣，形容家境極度貧窮、一無所有。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>他雖然出身赤貧如洗的家庭，卻憑勤奮努力翻轉人生。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 7. 青紅皂白 -->
+                <div class="metaphor-card idiom-card" data-colors="red green black white" data-keywords="青紅皂白 青 紅 皂 白 是非">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-scale-balanced" style="color:#5d4037;"></i> 青紅皂白
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄑㄧㄥ ㄏㄨㄥˊ ㄗㄠˋ ㄅㄞˊ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「青」、「紅」、「皂」（黑）、「白」</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>皂：黑色。原指青、紅、黑、白四種色彩。引申為事情的是非曲直與原委。常連用為「不分青紅皂白」。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>遇事應先查明真相，不可不分青紅皂白就盲目責備他人。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 8. 黃袍加身 -->
+                <div class="metaphor-card idiom-card" data-colors="yellow" data-keywords="黃袍加身 黃 趙匡胤 帝王">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-crown" style="color:#fbc02d;"></i> 黃袍加身
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄏㄨㄤˊ ㄆㄠˊ ㄐㄧㄚ ㄕㄣ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「黃」（帝王尊貴象徵色彩）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>指宋太祖趙匡胤陳橋兵變穿上黃袍被擁立為帝的故事。比喻被擁立為帝王或成為首領。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>歷史上的趙匡胤在陳橋兵變後黃袍加身，建立了宋朝。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 9. 黑箱作業 -->
+                <div class="metaphor-card idiom-card" data-colors="black" data-keywords="黑箱作業 黑 暗中 不公開">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-box-archive" style="color:#212121;"></i> 黑箱作業
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄏㄟ ㄒㄧㄤ ㄗㄨㄛˋ ㄧㄝˋ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「黑」（暗中、不公開）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>比喻暗中進行、不公開透明、缺乏監督的程序或決策運作。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>本項招標過程完全公開透明，絕無黑箱作業。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 10. 大紅大紫 -->
+                <div class="metaphor-card idiom-card" data-colors="red" data-keywords="大紅大紫 紅 紫 顯赫 知名">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-star" style="color:#e53935;"></i> 大紅大紫
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄉㄚˋ ㄏㄨㄥˊ ㄉㄚˋ ㄗˇ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「紅」（紅色）、「紫」（紫色）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>形容人在演藝界、事業或名聲極其顯赫、大受歡迎與注目。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>她憑藉這部喜劇電影迅速紅遍全國，事業大紅大紫。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 11. 面紅耳赤 -->
+                <div class="metaphor-card idiom-card" data-colors="red" data-keywords="面紅耳赤 紅 赤 羞愧 爭執">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-face-flushed" style="color:#c62828;"></i> 面紅耳赤
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄇㄧㄢˋ ㄏㄨㄥˊ ㄦˇ ㄔˋ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「紅」（紅色）、「赤」（大紅色）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>臉部與耳朵都發紅。形容因緊張、羞愧、急躁或爭執而臉發紅的樣子。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>兩人為了小事爭吵得面紅耳赤，旁人趕忙出來協調。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 12. 青黃不接 -->
+                <div class="metaphor-card idiom-card" data-colors="green yellow" data-keywords="青黃不接 青 黃 糧食 短缺">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-wheat-awn-circle-exclamation" style="color:#f57f17;"></i> 青黃不接
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄑㄧㄥ ㄏㄨㄤˊ ㄅㄨˋ ㄐㄧㄝ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「青」（綠色莊稼）、「黃」（成熟黃穀）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>指舊糧吃完、新糧未熟的短缺期。比喻人才、物力或物資短缺暫時中斷補給不上。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>公司正逢新舊交替、經驗人才青黃不接的時期。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 13. 青出於藍 -->
+                <div class="metaphor-card idiom-card" data-colors="green" data-keywords="青出於藍 青 藍 學生 超越">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-graduation-cap" style="color:#1b5e20;"></i> 青出於藍
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄑㄧㄥ ㄔㄨ ㄩˊ ㄌㄢˊ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「青」（靛青染料）、「藍」（蓼藍草）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>靛青提取自藍草，但顏色比藍草更為深鮮。比喻學生勝過老師，後輩超越前輩。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>他這幾年的成就已超過了他的指導老師，真是青出於藍。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 14. 爐火純青 -->
+                <div class="metaphor-card idiom-card" data-colors="green" data-keywords="爐火純青 青 純熟 完美的">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-fire-flame-curved" style="color:#0288d1;"></i> 爐火純青
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄌㄨˊ ㄏㄨㄛˇ ㄔㄨㄣˊ ㄑㄧㄥ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「青」（青藍色火焰）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>道家煉丹時爐火變為純青色即成功。比喻學問、技能、技術達到了極其純熟完美的境界。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>老師傅的木雕技藝精湛，早已達到了爐火純青的境界。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 15. 心灰意冷 -->
+                <div class="metaphor-card idiom-card" data-colors="white" data-keywords="心灰意冷 灰 失望 消沉">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-heart-crack" style="color:#78909c;"></i> 心灰意冷
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄒㄧㄣ ㄏㄨㄟ ㄧˋ ㄌㄥˇ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「灰」（冷灰無熱氣）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>灰：像冷灰般無熱氣。形容意志消沉失望，失去信心與熱情。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>面對多次挫折，他一時感到心灰意冷，幸有朋友熱情鼓勵。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 16. 死灰復燃 -->
+                <div class="metaphor-card idiom-card" data-colors="white" data-keywords="死灰復燃 灰 重新抬頭 惡勢力">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-fire" style="color:#e65100;"></i> 死灰復燃
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄙˇ ㄏㄨㄟ ㄈㄨˋ ㄖㄢˊ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「灰」（冷灰）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>冷熄的灰燼重新燃燒起來。比喻已經失敗或消失的壞事物、惡勢力重新抬頭起作用。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>執法單位必須時刻警戒，絕不能讓不法行為死灰復燃。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 17. 白紙黑字 -->
+                <div class="metaphor-card idiom-card" data-colors="white black" data-keywords="白紙黑字 白 黑 確鑿 證據">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-file-lines" style="color:#37474f;"></i> 白紙黑字
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄅㄞˊ ㄓˇ ㄏㄟ ㄗˋ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「白」（白色）、「黑」（黑色）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>白紙上寫著黑字。比喻證據確鑿，契約內容真實不容否認或賴帳。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>合約上白紙黑字寫得清清楚楚，容不得任何人推卸責任。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+
+                <!-- 18. 黑白分明 -->
+                <div class="metaphor-card idiom-card" data-colors="black white" data-keywords="黑白分明 黑 白 是非 立場">
+                    <div class="metaphor-title">
+                        <i class="fa-solid fa-circle-half-stroke" style="color:#212121;"></i> 黑白分明
+                        <div class="color-pinyin" style="font-size:0.88rem; font-weight:normal; margin-top:3px; color:var(--text-muted);">(ㄏㄟ ㄅㄞˊ ㄈㄣ ㄇㄧㄥˊ)</div>
+                    </div>
+                    <span class="metaphor-target">含色彩字 ➔ 「黑」（黑色）、「白」（白色）</span>
+                    <div class="idiom-def-wrapper">
+                        <div class="metaphor-desc"><strong>【釋義】</strong>黑色與白色區分得非常明確。比喻是非曲直非常清楚，立場與界限分明。</div>
+                        <div class="metaphor-desc" style="margin-top:6px; background:#f9f9f9; padding:6px 8px; border-radius:6px;"><strong>【例句】</strong>在這件原則性問題上，他的態度與立場向來黑白分明。</div>
+                    </div>
+                    <button class="idiom-toggle-btn" onclick="toggleIdiomDef(this)"><i class="fa-solid fa-eye-slash"></i> 隱藏釋義</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 單元四 ==================== -->
+        <section id="unit4" class="content-section">
+            <div class="section-header">
+                <div class="section-title-wrap">
+                    <div class="section-num">四</div>
+                    <div>
                         <h2 class="section-title">觀念判讀解密</h2>
                     </div>
                 </div>
@@ -1523,11 +1810,11 @@
             </div>
         </section>
 
-        <!-- ==================== 單元四 ==================== -->
-        <section id="unit4" class="content-section">
+        <!-- ==================== 單元五 ==================== -->
+        <section id="unit5" class="content-section">
             <div class="section-header">
                 <div class="section-title-wrap">
-                    <div class="section-num">四</div>
+                    <div class="section-num">五</div>
                     <div>
                         <h2 class="section-title">課堂綜合檢測</h2>
                     </div>
@@ -2054,6 +2341,65 @@
         function closeScoreOverlay() {
             document.getElementById('score-overlay').classList.remove('active');
             scrollToSection('quiz-container');
+        }
+
+        function filterIdiomColor(color) {
+            document.querySelectorAll('.idiom-filter-btn').forEach(btn => btn.classList.remove('active'));
+            const targetBtn = document.querySelector(`.idiom-filter-btn[data-color="${color}"]`);
+            if (targetBtn) targetBtn.classList.add('active');
+
+            const searchVal = document.getElementById('idiom-search').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.idiom-card');
+
+            cards.forEach(card => {
+                const cardColors = card.getAttribute('data-colors') || '';
+                const cardText = card.innerText.toLowerCase();
+
+                const colorMatch = (color === 'all' || cardColors.includes(color));
+                const searchMatch = (searchVal === '' || cardText.includes(searchVal));
+
+                if (colorMatch && searchMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterIdioms() {
+            const activeBtn = document.querySelector('.idiom-filter-btn.active');
+            const currentColor = activeBtn ? activeBtn.getAttribute('data-color') : 'all';
+            filterIdiomColor(currentColor);
+        }
+
+        function toggleAllIdiomDefs(show) {
+            document.querySelectorAll('.idiom-card').forEach(card => {
+                const defBox = card.querySelector('.idiom-def-wrapper');
+                const btn = card.querySelector('.idiom-toggle-btn');
+                if (defBox && btn) {
+                    if (show) {
+                        defBox.style.display = 'block';
+                        btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> 隱藏釋義';
+                    } else {
+                        defBox.style.display = 'none';
+                        btn.innerHTML = '<i class="fa-solid fa-eye"></i> 顯示釋義';
+                    }
+                }
+            });
+        }
+
+        function toggleIdiomDef(btn) {
+            const card = btn.closest('.idiom-card');
+            const defBox = card.querySelector('.idiom-def-wrapper');
+            if (defBox) {
+                if (defBox.style.display === 'none') {
+                    defBox.style.display = 'block';
+                    btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> 隱藏釋義';
+                } else {
+                    defBox.style.display = 'none';
+                    btn.innerHTML = '<i class="fa-solid fa-eye"></i> 顯示釋義';
+                }
+            }
         }
     </script>
 </body>
