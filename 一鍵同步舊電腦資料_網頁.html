@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨電腦資料一鍵同步工具網頁 - 李賦國文</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- 載入 Google 雲端硬碟同步資料庫 -->
+    <script src="app_data.js"></script>
+    <style>
+        :root {
+            --primary: #5C7C2F;
+            --primary-hover: #486324;
+            --primary-light: #f0f7ea;
+            --dark-blue: #0f172a;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #334155;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 30px 15px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 860px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--dark-blue);
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 18px 0;
+        }
+
+        .status-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #cbd5e1;
+        }
+
+        .status-box.active {
+            border-left-color: var(--accent-green);
+            background: #f0fdf4;
+        }
+
+        .status-box h3 {
+            font-size: 1.1rem;
+            color: var(--dark-blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-box p {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: var(--dark-blue);
+            border: 1px solid #cbd5e1;
+        }
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-blue {
+            background-color: #2563eb;
+            color: white;
+        }
+        .btn-blue:hover {
+            background-color: #1d4ed8;
+        }
+
+        .notice-banner {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 14px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .links-bar {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .links-bar a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .links-bar a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🔄 跨電腦資料一鍵同步工具</h1>
+        <p>自動將舊電腦中的學生名冊、收費單與課堂紀錄打包，讓新電腦立刻接軌！</p>
+    </header>
+
+    <!-- 雲端同步檔案狀態 -->
+    <div class="card" style="border: 2px solid #5C7C2F; background: #fafdf8;">
+        <span class="step-badge" style="background-color: #5C7C2F;">☁️ 雲端同步檔狀態 (app_data.js)</span>
+        <h2 style="font-size: 1.3rem; color: var(--dark-blue); margin-bottom: 6px;">Google 雲端硬碟中的最新同步資料</h2>
+        <p style="color: #64748b; font-size: 0.95rem;">檢測到 Google 雲端硬碟中的 <code>app_data.js</code> 內容：</p>
+
+        <div class="status-grid">
+            <div class="status-box active" id="cloud-box-students">
+                <h3>👥 雲端學生名冊</h3>
+                <p id="cloud-desc-students">讀取中...</p>
+            </div>
+            <div class="status-box active" id="cloud-box-billing">
+                <h3>💰 雲端收費單設定</h3>
+                <p id="cloud-desc-billing">讀取中...</p>
+            </div>
+            <div class="status-box active" id="cloud-box-lesson">
+                <h3>🎒 雲端課堂紀錄</h3>
+                <p id="cloud-desc-lesson">讀取中...</p>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="forceApplyCloudDataToBrowser()">
+                📥 一鍵將雲端資料寫入此台電腦瀏覽器
+            </button>
+            <a href="teacher_portal_網頁.html" class="btn btn-secondary" style="border-color: #4f46e5; background: #eef2ff; color: #4f46e5; font-weight: 700;">
+                📱 開啟手機/iPad專屬紀錄中心
+            </a>
+            <a href="課程紀錄收費單_網頁.html" class="btn btn-secondary" style="border-color: #5C7C2F; color: #5C7C2F; font-weight: 700;">
+                📝 直接開啟收費單網頁
+            </a>
+            <a href="課堂紀錄產生器_網頁.html" class="btn btn-secondary" style="border-color: #4f46e5; color: #4f46e5; font-weight: 700;">
+                🎒 直接開啟課堂紀錄網頁
+            </a>
+        </div>
+    </div>
+
+    <!-- 舊電腦打包區塊 -->
+    <div class="card">
+        <span class="step-badge" style="background-color: #64748b;">舊電腦專用：打包暫存</span>
+        <h2 style="font-size: 1.3rem; color: var(--dark-blue); margin-bottom: 6px;">從這台電腦的瀏覽器暫存打包匯出</h2>
+        <p style="color: #64748b; font-size: 0.95rem;">若您在舊電腦上操作，可點擊下方按鈕將瀏覽器快取打包為 <code>app_data.js</code>：</p>
+
+        <div class="status-grid">
+            <div class="status-box" id="box-students">
+                <h3>👥 本機學生名冊</h3>
+                <p id="desc-students">正在檢測...</p>
+            </div>
+            <div class="status-box" id="box-billing">
+                <h3>💰 本機收費單暫存</h3>
+                <p id="desc-billing">正在檢測...</p>
+            </div>
+            <div class="status-box" id="box-lesson">
+                <h3>🎒 本機課堂紀錄</h3>
+                <p id="desc-lesson">正在檢測...</p>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="exportAndDownloadAppData()">
+                💾 打包此電腦暫存並下載 app_data.js
+            </button>
+            <button class="btn btn-secondary" onclick="toggleCodeView()">
+                🔍 檢視代碼
+            </button>
+        </div>
+
+        <div id="code-preview" class="code-box"></div>
+    </div>
+
+    <div class="links-bar">
+        <a href="李賦國文網頁.html">🏠 返回李賦國文首頁</a>
+        <a href="課程紀錄收費單_網頁.html">💵 收費單產生器</a>
+        <a href="課堂紀錄產生器.html">📖 課堂紀錄產生器</a>
+    </div>
+</div>
+
+<script>
+    let collectedData = {
+        version: "1.0",
+        lastUpdated: new Date().toISOString().split('T')[0],
+        students: {},
+        billingConfig: null,
+        lessonDraft: null
+    };
+
+    function checkCloudData() {
+        if (window.SYNCED_APP_DATA) {
+            const data = window.SYNCED_APP_DATA;
+            // 1. 學生
+            if (data.students && Object.keys(data.students).length > 0) {
+                const names = Object.keys(data.students).join('、');
+                document.getElementById('cloud-desc-students').innerHTML = `✅ 已同步 <strong>${Object.keys(data.students).length} 位學生</strong>！<br><span style="font-size:0.8rem; color:#059669;">${names}</span>`;
+            } else {
+                document.getElementById('cloud-desc-students').innerText = 'ℹ️ 雲端檔尚無學生名冊';
+            }
+
+            // 2. 收費單
+            if (data.billingConfig) {
+                document.getElementById('cloud-desc-billing').innerHTML = `✅ 已同步收費單：<br><strong style="color:#0f172a;">${data.billingConfig.fullTitle || '收費單'}</strong> (${data.billingConfig.courseInfo || ''})`;
+            } else {
+                document.getElementById('cloud-desc-billing').innerText = 'ℹ️ 雲端檔尚無收費單設定';
+            }
+
+            // 3. 課堂紀錄
+            if (data.lessonDraft) {
+                const wordsCount = data.lessonDraft.words ? data.lessonDraft.words.length : 0;
+                document.getElementById('cloud-desc-lesson').innerHTML = `✅ 已同步課堂紀錄草稿：<br><strong>${data.lessonDraft.date || ''}</strong> (${wordsCount} 個生字卡)`;
+            } else {
+                document.getElementById('cloud-desc-lesson').innerText = 'ℹ️ 雲端檔尚無課堂草稿';
+            }
+        } else {
+            document.getElementById('cloud-desc-students').innerText = '⚠️ 尚未讀取到 app_data.js';
+            document.getElementById('cloud-desc-billing').innerText = '⚠️ 尚未讀取到 app_data.js';
+            document.getElementById('cloud-desc-lesson').innerText = '⚠️ 尚未讀取到 app_data.js';
+        }
+    }
+
+    function forceApplyCloudDataToBrowser() {
+        if (!window.SYNCED_APP_DATA) {
+            alert('⚠️ 尚未載入 app_data.js，請確認檔案在同一目錄下！');
+            return;
+        }
+        const data = window.SYNCED_APP_DATA;
+        if (data.students) {
+            localStorage.setItem('line_billing_students', JSON.stringify(data.students));
+        }
+        if (data.billingConfig) {
+            localStorage.setItem('fee_receipt_config_v4', JSON.stringify(data.billingConfig));
+        }
+        if (data.lessonDraft) {
+            localStorage.setItem('lesson_record_draft', JSON.stringify(data.lessonDraft));
+        }
+        alert('🎉 成功！雲端資料庫（14位學生與紀錄）已成功寫入這台電腦的瀏覽器！\n您現在可以直接開啟收費單或課堂紀錄網頁！');
+        window.location.href = '課程紀錄收費單_網頁.html';
+    }
+
+    function scanLocalStorage() {
+        // 1. 學生名冊
+        const rawStudents = localStorage.getItem('line_billing_students');
+        const boxStudents = document.getElementById('box-students');
+        const descStudents = document.getElementById('desc-students');
+        if (rawStudents) {
+            try {
+                const students = JSON.parse(rawStudents);
+                collectedData.students = students;
+                const count = Object.keys(students).length;
+                boxStudents.classList.add('active');
+                descStudents.innerHTML = `✅ 已找到 <strong>${count} 位學生</strong> 名冊。<br><span style="font-size:0.8rem; color:#059669;">包含時薪、課程名稱等</span>`;
+            } catch(e) {
+                descStudents.innerText = '⚠️ 學生資料解析異常';
+            }
+        } else {
+            descStudents.innerText = 'ℹ️ 尚未找到自訂學生名冊';
+        }
+
+        // 2. 收費單設定
+        const rawBilling = localStorage.getItem('fee_receipt_config_v4');
+        const boxBilling = document.getElementById('box-billing');
+        const descBilling = document.getElementById('desc-billing');
+        if (rawBilling) {
+            try {
+                const billing = JSON.parse(rawBilling);
+                collectedData.billingConfig = billing;
+                boxBilling.classList.add('active');
+                descBilling.innerHTML = `✅ 已找到最近編輯的收費單！<br><strong style="color:#0f172a;">${billing.fullTitle || '未命名'}</strong> (${billing.items ? billing.items.length : 0} 筆明細)`;
+            } catch(e) {
+                descBilling.innerText = '⚠️ 收費單資料解析異常';
+            }
+        } else {
+            descBilling.innerText = 'ℹ️ 尚無收費單編輯暫存';
+        }
+
+        // 3. 課堂紀錄草稿
+        const rawLesson = localStorage.getItem('lesson_record_draft');
+        const boxLesson = document.getElementById('box-lesson');
+        const descLesson = document.getElementById('desc-lesson');
+        if (rawLesson) {
+            try {
+                const lesson = JSON.parse(rawLesson);
+                collectedData.lessonDraft = lesson;
+                boxLesson.classList.add('active');
+                descLesson.innerHTML = `✅ 已找到課堂紀錄草稿！<br>日期：${lesson.date || '未填'}，包含 ${lesson.words ? lesson.words.length : 0} 個生字卡`;
+            } catch(e) {
+                descLesson.innerText = '⚠️ 課堂紀錄解析異常';
+            }
+        } else {
+            descLesson.innerText = 'ℹ️ 尚無課堂紀錄草稿暫存';
+        }
+
+        document.getElementById('code-preview').textContent = generateAppDataFileContent();
+    }
+
+    function generateAppDataFileContent() {
+        return `/**\n * 課堂紀錄產生器 & 課程紀錄收費單 - 跨電腦雲端同步資料庫\n * 自動生成時間：${new Date().toLocaleString()}\n */\nwindow.SYNCED_APP_DATA = ${JSON.stringify(collectedData, null, 4)};\n`;
+    }
+
+    async function exportAndDownloadAppData() {
+        const content = generateAppDataFileContent();
+        
+        if (window.showSaveFilePicker) {
+            try {
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: 'app_data.js',
+                    types: [{
+                        description: 'JavaScript File',
+                        accept: { 'text/javascript': ['.js'] }
+                    }]
+                });
+                const writable = await handle.createWritable();
+                await writable.write(content);
+                await writable.close();
+                alert('🎉 成功！已直接儲存至 app_data.js。\nGoogle 雲端硬碟將自動同步到您的新電腦！');
+                return;
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+            }
+        }
+
+        const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'app_data.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        alert('🎉 已為您下載 app_data.js！\n請直接將下載的檔案放入 Google 雲端硬碟的「IDE備課」資料夾中取代舊檔，新電腦即可自動同步！');
+    }
+
+    function toggleCodeView() {
+        const box = document.getElementById('code-preview');
+        box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        checkCloudData();
+        scanLocalStorage();
+    });
+</script>
+</body>
+</html>
