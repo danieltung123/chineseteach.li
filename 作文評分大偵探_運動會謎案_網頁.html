@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作文評分大偵探：操場迷蹤案｜互動網頁</title>
+    <meta name="description" content="專為國小高年級與國中生打造的偵探解謎作文評分互動網頁。涵蓋立意取材、結構組織、遣詞造句、錯字標點四大標準，結合《一次難忘的運動會》破除老套寫作。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+TC:wght@400;600;700;900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0c10;
+            --bg-surface: #12161f;
+            --bg-card: rgba(22, 27, 38, 0.92);
+            --bg-parchment: #fdf6e2;
+            --gold-bright: #f5b041;
+            --gold-glow: #ffc857;
+            --gold-dark: #b8860b;
+            --crimson: #a82323;
+            --crimson-glow: #e63946;
+            --emerald: #2a9d8f;
+            --ink-text: #e8ecf2;
+            --muted-text: #94a3b8;
+            --parchment-text: #2d261e;
+            --border-brass: rgba(245, 176, 65, 0.35);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --shadow-mystic: 0 12px 40px rgba(0, 0, 0, 0.7);
+            --shadow-gold: 0 0 25px rgba(245, 176, 65, 0.25);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif TC', serif, system-ui;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--ink-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(184, 134, 11, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(168, 35, 35, 0.07) 0%, transparent 40%),
+                linear-gradient(to bottom, #090b0e, #0e1219);
+        }
+
+        /* Ambient Canvas Dust / Fog */
+        #ambientCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Main Container */
+        .detective-app {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 24px 20px 80px;
+        }
+
+        /* Top Navigation Header */
+        header.detective-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            background: rgba(18, 22, 31, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--border-brass);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-mystic);
+            margin-bottom: 24px;
+        }
+
+        .detective-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .badge-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--gold-glow), var(--gold-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 15px rgba(245, 176, 65, 0.4);
+            border: 2px solid #fff3c4;
+        }
+
+        .brand-text h1 {
+            font-family: 'Cinzel', 'Noto Serif TC', serif;
+            font-size: 1.35rem;
+            color: var(--gold-bright);
+            letter-spacing: 1.5px;
+            font-weight: 900;
+        }
+
+        .brand-text span {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+            letter-spacing: 1px;
+        }
+
+        .detective-rank-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-brass);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+
+        .rank-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            box-shadow: 0 0 8px var(--gold-bright);
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        /* Hero Banner with Generated Painting */
+        .hero-dossier {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-brass);
+            box-shadow: var(--shadow-mystic);
+            margin-bottom: 28px;
+            background: #000;
+        }
+
+        .hero-banner-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.72) contrast(1.1);
+            transition: transform 1.2s ease;
+        }
+
+        .hero-dossier:hover .hero-banner-img {
+            transform: scale(1.02);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 12, 16, 0.98) 12%, rgba(10, 12, 16, 0.4) 60%, rgba(10, 12, 16, 0.2) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px 36px;
+        }
+
+        .case-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--crimson);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            width: fit-content;
+        }
+
+        .hero-overlay h2 {
+            font-size: 2.1rem;
+            color: #fff;
+            font-weight: 900;
+            margin-bottom: 8px;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-overlay p {
+            font-size: 1rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        /* Progress Steps Bar */
+        .case-tabs-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .case-tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .case-tab-btn:hover {
+            border-color: var(--border-brass);
+            transform: translateY(-2px);
+            background: rgba(30, 37, 52, 0.95);
+        }
+
+        .case-tab-btn.active {
+            border-color: var(--gold-bright);
+            background: linear-gradient(145deg, rgba(32, 40, 58, 0.95), rgba(20, 25, 38, 0.95));
+            box-shadow: 0 0 20px rgba(245, 176, 65, 0.2);
+        }
+
+        .case-tab-btn.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--emerald);
+            color: white;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .tab-number {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            color: var(--gold-bright);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .tab-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .tab-desc {
+            font-size: 0.78rem;
+            color: var(--muted-text);
+        }
+
+        /* Case Panels */
+        .case-panel {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-brass);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            box-shadow: var(--shadow-mystic);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .case-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(245, 176, 65, 0.2);
+            padding-bottom: 20px;
+        }
+
+        .panel-header-left h3 {
+            font-size: 1.6rem;
+            color: var(--gold-bright);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .panel-header-left p {
+            color: var(--muted-text);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .panel-badge-standard {
+            background: rgba(245, 176, 65, 0.12);
+            color: var(--gold-bright);
+            border: 1px solid var(--border-brass);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Evidence Board Banner Box */
+        .evidence-board-box {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 28px;
+            max-height: 200px;
+        }
+
+        .evidence-board-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+
+        .evidence-board-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 18px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            font-size: 0.85rem;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Parchment Document Box (Old Manuscript) */
+        .parchment-dossier {
+            background-color: var(--bg-parchment);
+            color: var(--parchment-text);
+            padding: 24px 28px;
+            border-radius: var(--radius-md);
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(184, 134, 11, 0.15);
+            margin-bottom: 28px;
+            border: 1px solid #e2d4b7;
+        }
+
+        .parchment-dossier::before {
+            content: 'EVIDENCE / 案件原始草稿卷宗';
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #8b5a2b;
+            font-weight: 900;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #c4b59d;
+            padding-bottom: 6px;
+        }
+
+        .parchment-dossier p {
+            line-height: 1.85;
+            font-size: 1.05rem;
+            color: #2b251d;
+        }
+
+        /* Interactive Exercise Sections */
+        .mission-instruction {
+            background: rgba(245, 176, 65, 0.08);
+            border-left: 4px solid var(--gold-bright);
+            padding: 14px 18px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            color: #fce7b0;
+        }
+
+        /* Case 1: Clue Selection Cards */
+        .clue-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .clue-card {
+            background: rgba(18, 22, 31, 0.9);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .clue-card:hover {
+            border-color: var(--border-brass);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .clue-card.selected-trap {
+            border-color: var(--crimson-glow);
+            background: rgba(168, 35, 35, 0.15);
+        }
+
+        .clue-card.selected-gem {
+            border-color: var(--emerald);
+            background: rgba(42, 157, 143, 0.15);
+        }
+
+        .clue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .clue-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--gold-bright);
+        }
+
+        .clue-badge {
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .clue-body {
+            font-size: 0.93rem;
+            color: #d1d5db;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .clue-feedback {
+            font-size: 0.85rem;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            display: none;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .clue-card.selected-trap .clue-feedback {
+            display: block;
+            background: rgba(230, 57, 70, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(230, 57, 70, 0.3);
+        }
+
+        .clue-card.selected-gem .clue-feedback {
+            display: block;
+            background: rgba(42, 157, 143, 0.15);
+            color: #a7f3d0;
+            border: 1px solid rgba(42, 157, 143, 0.3);
+        }
+
+        /* Case 2: Timeline Reorganization */
+        .timeline-puzzle-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .puzzle-item {
+            background: rgba(18, 22, 31, 0.9);
+            border: 1px solid var(--border-brass);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .puzzle-item:hover {
+            background: rgba(30, 37, 52, 0.95);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .puzzle-handle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--gold-bright);
+            font-weight: bold;
+            min-width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(245, 176, 65, 0.1);
+            border: 1px solid var(--border-brass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .puzzle-text {
+            flex: 1;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .puzzle-arrows {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .puzzle-btn-move {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--gold-bright);
+            width: 30px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+
+        .puzzle-btn-move:hover {
+            background: var(--gold-bright);
+            color: #000;
+        }
+
+        /* Case 3: Diction Upgrade Clicker */
+        .diction-interactive-box {
+            background: rgba(15, 18, 26, 0.85);
+            border: 1px solid var(--border-brass);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            margin-bottom: 24px;
+            line-height: 2.2;
+            font-size: 1.1rem;
+        }
+
+        .upgrade-target {
+            background: rgba(230, 57, 70, 0.18);
+            color: #fca5a5;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border-bottom: 2px dashed #e63946;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        .upgrade-target:hover {
+            background: rgba(230, 57, 70, 0.35);
+            transform: scale(1.04);
+        }
+
+        .upgrade-target.upgraded {
+            background: rgba(42, 157, 143, 0.2);
+            color: #5eead4;
+            border-bottom: 2px solid #2a9d8f;
+        }
+
+        /* Case 4: Typo & Punctuation Inspection */
+        .typo-inspection-box {
+            background: var(--bg-parchment);
+            color: var(--parchment-text);
+            padding: 26px 30px;
+            border-radius: var(--radius-md);
+            font-size: 1.12rem;
+            line-height: 2.3;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            border: 1px solid #d4c5a9;
+            position: relative;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .clickable-error {
+            cursor: pointer;
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 0;
+            display: inline;
+            transition: color 0.2s, background-color 0.2s;
+            position: relative;
+        }
+
+        .clickable-error:not(.fixed):hover {
+            /* 保持純文字自然狀態，不顯露背景紅底或陰影，防止懸停時提前洩題 */
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        .clickable-error.fixed {
+            color: #15803d;
+            font-weight: 700;
+            background: rgba(34, 197, 94, 0.2);
+            border-bottom: 2px solid #22c55e;
+            border-radius: 2px;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .typo-clue-detail {
+            background: rgba(18, 22, 31, 0.95);
+            border: 1px solid var(--border-brass);
+            border-left: 4px solid var(--gold-bright);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .clue-detail-title {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--gold-bright);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .clue-detail-desc {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons */
+        .panel-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .btn-detective {
+            background: linear-gradient(135deg, var(--gold-bright), var(--gold-dark));
+            color: #0b0f17;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 176, 65, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-detective:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(245, 176, 65, 0.5);
+            background: linear-gradient(135deg, #ffd369, #d4af37);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+            padding: 12px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Modal for Diction Upgrade Picker */
+        .detective-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .detective-modal-overlay.show {
+            display: flex;
+        }
+
+        .detective-modal {
+            background: var(--bg-surface);
+            border: 2px solid var(--border-brass);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 600px;
+            padding: 28px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), var(--shadow-gold);
+            animation: modalPop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(245, 176, 65, 0.2);
+            padding-bottom: 14px;
+        }
+
+        .modal-header h4 {
+            color: var(--gold-bright);
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--muted-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close-btn:hover {
+            color: #fff;
+        }
+
+        .modal-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .modal-choice-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            color: #e2e8f0;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.98rem;
+            line-height: 1.5;
+        }
+
+        .modal-choice-btn:hover {
+            border-color: var(--gold-bright);
+            background: rgba(245, 176, 65, 0.1);
+            transform: translateX(4px);
+        }
+
+        /* Final Certificate Section */
+        .certificate-container {
+            background: radial-gradient(circle at center, #182030 0%, #0d111a 100%);
+            border: 2px solid var(--gold-bright);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: 0 0 50px rgba(245, 176, 65, 0.25);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .cert-badge-img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 35px rgba(245, 176, 65, 0.5);
+            animation: floatBadge 4s ease-in-out infinite;
+        }
+
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .cert-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            color: var(--gold-bright);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(245, 176, 65, 0.3);
+        }
+
+        .cert-subtitle {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 24px;
+        }
+
+        .student-name-input-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-brass);
+            border-radius: 30px;
+            padding: 8px 20px;
+            margin-bottom: 28px;
+        }
+
+        .student-name-input-group input {
+            background: transparent;
+            border: none;
+            color: var(--gold-bright);
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+
+        .radar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .score-card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+        }
+
+        .score-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .score-title {
+            font-weight: 700;
+            color: var(--gold-bright);
+            font-size: 1.05rem;
+        }
+
+        .score-stars {
+            color: #fbbf24;
+            font-size: 0.95rem;
+        }
+
+        .score-card p {
+            font-size: 0.88rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Restored Exemplary Essay */
+        .restored-essay-box {
+            background: var(--bg-parchment);
+            color: var(--parchment-text);
+            text-align: left;
+            padding: 36px 40px;
+            border-radius: var(--radius-md);
+            border: 1px solid #d4c5a9;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .restored-essay-box h4 {
+            font-size: 1.5rem;
+            color: #8b5a2b;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 900;
+            border-bottom: 2px solid #8b5a2b;
+            padding-bottom: 10px;
+        }
+
+        .restored-essay-box p {
+            font-size: 1.08rem;
+            line-height: 2;
+            margin-bottom: 16px;
+            text-indent: 2em;
+        }
+
+        /* Stamp Effect */
+        .certified-stamp {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            border: 4px solid var(--crimson-glow);
+            color: var(--crimson-glow);
+            font-size: 1.25rem;
+            font-weight: 900;
+            padding: 8px 18px;
+            border-radius: 8px;
+            transform: rotate(-12deg);
+            opacity: 0.85;
+            letter-spacing: 2px;
+            pointer-events: none;
+            user-select: none;
+            box-shadow: 0 0 15px rgba(230, 57, 70, 0.3);
+        }
+
+        /* Print Media Style */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+            }
+            .detective-nav, .hero-dossier, .case-tabs-container, .panel-actions, .btn-detective, .btn-secondary, #ambientCanvas {
+                display: none !important;
+            }
+            .case-panel {
+                display: none !important;
+            }
+            #caseFinal {
+                display: block !important;
+                background: #fff !important;
+                color: #000 !important;
+                border: none !important;
+                padding: 0 !important;
+            }
+            .certificate-container {
+                border: 2px solid #000 !important;
+                background: #fff !important;
+                color: #000 !important;
+                box-shadow: none !important;
+            }
+            .cert-title {
+                color: #000 !important;
+            }
+            .restored-essay-box {
+                background: #fff !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .detective-app {
+                padding: 16px 12px 60px;
+            }
+            .case-tabs-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            .clue-cards-grid, .radar-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-overlay h2 {
+                font-size: 1.6rem;
+            }
+            .panel-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .parchment-dossier, .restored-essay-box {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Particle Canvas -->
+    <canvas id="ambientCanvas"></canvas>
+
+    <div class="detective-app">
+
+        <!-- Navigation Bar -->
+        <header class="detective-nav" id="topNav">
+            <div class="detective-brand">
+                <div class="badge-icon" id="brandBadge">🔍</div>
+                <div class="brand-text">
+                    <h1>作文評分大偵探</h1>
+                    <span>SHERLOCK WRITING BUREAU ｜ 互動網頁</span>
+                </div>
+            </div>
+            <div class="detective-rank-pill">
+                <span class="rank-dot"></span>
+                <span id="playerRankText">首席探員・辦案中</span>
+            </div>
+        </header>
+
+        <!-- Hero Dossier Banner -->
+        <section class="hero-dossier" id="heroBanner">
+            <img src="素材資料/detective_hero.jpg" alt="偵探案發現場書桌" class="hero-banner-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516387938699-a93567ec168e?auto=format&fit=crop&w=1200&q=80';">
+            <div class="hero-overlay">
+                <span class="case-tag">🚨 卷宗編號 082 ｜ 操場退件特急案</span>
+                <h2>操場迷蹤案：破解四大筆跡密碼</h2>
+                <p>寫作評審會送來一份被評為「平庸無趣、錯漏百出」的國中/國小學生退件草稿《一次難忘的運動會》。身為首席大偵探，你必須深入案發核心，運用四大辦案技能，逐一破譯病因，重鑄出滿分神作！</p>
+            </div>
+        </section>
+
+        <!-- Step Navigation Tabs -->
+        <nav class="case-tabs-container" id="caseTabs" aria-label="案件階段導覽">
+            <button class="case-tab-btn active" id="tabCase1" onclick="switchCase(1)">
+                <span class="tab-number">CASE 01</span>
+                <span class="tab-title">動機線索</span>
+                <span class="tab-desc">立意取材 ｜ 破除俗套</span>
+            </button>
+            <button class="case-tab-btn" id="tabCase2" onclick="switchCase(2)">
+                <span class="tab-number">CASE 02</span>
+                <span class="tab-title">時空拼圖</span>
+                <span class="tab-desc">結構組織 ｜ 六何起承轉合</span>
+            </button>
+            <button class="case-tab-btn" id="tabCase3" onclick="switchCase(3)">
+                <span class="tab-number">CASE 03</span>
+                <span class="tab-title">供詞密碼</span>
+                <span class="tab-desc">遣詞造句 ｜ 百寶箱升級</span>
+            </button>
+            <button class="case-tab-btn" id="tabCase4" onclick="switchCase(4)">
+                <span class="tab-number">CASE 04</span>
+                <span class="tab-title">微物破綻</span>
+                <span class="tab-desc">錯字標點 ｜ 紅外線挑錯</span>
+            </button>
+        </nav>
+
+        <!-- ==================== CASE 1: 立意取材 ==================== -->
+        <main class="case-panel active" id="case1Panel">
+            <div class="panel-header">
+                <div class="panel-header-left">
+                    <h3>🔍 第一案：動機線索審查</h3>
+                    <p>評分標準一：【立意取材】—— 深入題旨，不落俗套，選取最具心靈震撼的真實細節。</p>
+                </div>
+                <div class="panel-badge-standard">標準一：立意取材</div>
+            </div>
+
+            <!-- Evidence Photo Board -->
+            <div class="evidence-board-box">
+                <img src="素材資料/detective_board.jpg" alt="案發現場照片與線索牆" class="evidence-board-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80';">
+                <div class="evidence-board-caption">
+                    📌 <strong>案情線索牆</strong>：運動會滿分作文的關鍵，在於「選材的獨特性」與「由事件提煉出的深刻思考」。
+                </div>
+            </div>
+
+            <div class="parchment-dossier">
+                <p><strong>【嫌犯原稿節錄】</strong>：今天天氣晴朗，萬里無雲，我們學校舉辦運動會。全校同學都到了，校長講了半小時話好無聊。大隊接力時我不小心在跑道上摔倒了，膝蓋破皮流血好痛，但我勇敢站起來繼續跑，大家都幫我拍手，最後我們班拿了第一名，這真是一次難忘的運動會。</p>
+            </div>
+
+            <div class="mission-instruction">
+                🕵️ <strong>偵探任務指示</strong>：全台灣有 80% 的學生寫運動會，都寫「跌倒摔傷又勇敢爬起來得第一名」，這是閱卷老師眼中的「俗套重災區」！請從下方 4 張線索卡片中，<strong>點擊揪出 2 個俗套陷阱</strong>，並<strong>選中 2 個具備高階立意的破案黃金線索</strong>！
+            </div>
+
+            <div class="clue-cards-grid" id="clueCardsGrid">
+                <!-- Card 1 (Trap) -->
+                <div class="clue-card" id="clue1" onclick="handleClueClick(1, 'trap')">
+                    <div>
+                        <div class="clue-header">
+                            <span class="clue-title">線索 A：跌倒受傷再站起來</span>
+                            <span class="clue-badge">選材類型 01</span>
+                        </div>
+                        <p class="clue-body">「接棒時跌倒了，膝蓋流血很痛，但我為了班級榮譽勇敢爬起來衝刺，最後贏得第一名。」</p>
+                    </div>
+                    <div class="clue-feedback">
+                        ❌ <strong>【俗套凶嫌】</strong>：全台 8 成學生同質化取材！閱卷老師看到麻木，缺乏真實深刻的情感挖掘。
+                    </div>
+                </div>
+
+                <!-- Card 2 (Trap) -->
+                <div class="clue-card" id="clue2" onclick="handleClueClick(2, 'trap')">
+                    <div>
+                        <div class="clue-header">
+                            <span class="clue-title">線索 B：時間點名流水帳</span>
+                            <span class="clue-badge">選材類型 02</span>
+                        </div>
+                        <p class="clue-body">「早上七點進校門，聽校長致詞，做健康操，中午吃便當，下午看拔河，四點放學很開心。」</p>
+                    </div>
+                    <div class="clue-feedback">
+                        ❌ <strong>【記帳凶嫌】</strong>：缺乏核心事件與主旨，平鋪直敘毫無波瀾，屬於最低等級的記敘文。
+                    </div>
+                </div>
+
+                <!-- Card 3 (Gem) -->
+                <div class="clue-card" id="clue3" onclick="handleClueClick(3, 'gem')">
+                    <div>
+                        <div class="clue-header">
+                            <span class="clue-title">線索 C：孤軍到團隊的心境轉變</span>
+                            <span class="clue-badge">黃金立意 ★</span>
+                        </div>
+                        <p class="clue-body">「從一百米個人短跑的緊張與孤獨，到大隊接力接過帶有隊友手溫的接力棒——那一刻我懂得自己不再是一個人，而是全班心跳同頻的凝聚！」</p>
+                    </div>
+                    <div class="clue-feedback">
+                        ⭐ <strong>【破案關鍵】</strong>：對比鮮明！從「個體的孤立」昇華到「群體的同甘共苦」，立意深刻動人！
+                    </div>
+                </div>
+
+                <!-- Card 4 (Gem) -->
+                <div class="clue-card" id="clue4" onclick="handleClueClick(4, 'gem')">
+                    <div>
+                        <div class="clue-header">
+                            <span class="clue-title">線索 D：看見聚光燈外的無名英雄</span>
+                            <span class="clue-badge">黃金立意 ★</span>
+                        </div>
+                        <p class="clue-body">「操場邊喊到喉嚨沙啞的啦啦隊、頂著烈日默默遞水與撿起號碼布的志工同學——看見榮耀背後那些不可或缺的微小齒輪。」</p>
+                    </div>
+                    <div class="clue-feedback">
+                        ⭐ <strong>【獨特視角】</strong>：視角從「跑者個人」拓展至「整個運動會生態與奉獻精神」，展現成熟的同理心與洞察力！
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-detective" id="btnNextCase1" onclick="validateCase1()">
+                    鎖定線索 ➔ 前往第二案：時空拼圖
+                </button>
+            </div>
+        </main>
+
+        <!-- ==================== CASE 2: 結構組織 ==================== -->
+        <main class="case-panel" id="case2Panel">
+            <div class="panel-header">
+                <div class="panel-header-left">
+                    <h3>🧩 第二案：案發時空拼圖</h3>
+                    <p>評分標準二：【結構組織】—— 掌握「起承轉合」四大支柱，段落過渡自然，層次分明。</p>
+                </div>
+                <div class="panel-badge-standard">標準二：結構組織</div>
+            </div>
+
+            <div class="mission-instruction">
+                🕵️ <strong>偵探任務指示</strong>：嫌犯試圖銷毀證詞，將文章碎成四個段落，順序已被惡意打亂！請運用<strong>「起・承・轉・合」</strong>時空邏輯，利用右側箭頭將段落調整至正確順序！
+            </div>
+
+            <div class="timeline-puzzle-list" id="timelinePuzzleList">
+                <!-- Items will be initialized by JS -->
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-secondary" onclick="switchCase(1)">返回第一案</button>
+                <button class="btn-detective" id="btnValidateCase2" onclick="validateCase2()">
+                    校對時序 ➔ 前往第三案：供詞密碼
+                </button>
+            </div>
+        </main>
+
+        <!-- ==================== CASE 3: 遣詞造句 ==================== -->
+        <main class="case-panel" id="case3Panel">
+            <div class="panel-header">
+                <div class="panel-header-left">
+                    <h3>🗝️ 第三案：嫌犯供詞密碼盤</h3>
+                    <p>評分標準三：【遣詞造句】—— 善用五感摹寫與生動修辭，拒絕貧乏陳腐的平淡字眼。</p>
+                </div>
+                <div class="panel-badge-standard">標準三：遣詞造句</div>
+            </div>
+
+            <div class="mission-instruction">
+                🕵️ <strong>偵探任務指示</strong>：檢視嫌犯供詞時，發現文中有 4 處「語彙極度貧乏、重複模糊」的致命傷！請<strong>點擊紅色虛線標註的詞句</strong>，從【寫作百寶箱】中選出精確生動的摹寫金句！
+            </div>
+
+            <div class="diction-interactive-box" id="dictionInteractiveBox">
+                這次運動會，我代表班上參加一百公尺短跑。
+                <span class="upgrade-target" id="target1" onclick="openDictionModal(1)">
+                    [站在起跑線上時，我很緊張]
+                </span>。
+                隨著槍聲響起，
+                <span class="upgrade-target" id="target2" onclick="openDictionModal(2)">
+                    [我跑得很快]
+                </span>，耳邊是呼嘯的風聲與同學們的加油聲。
+                最刺激的比賽是大隊接力。當我接過同學遞來的棒子時，
+                <span class="upgrade-target" id="target3" onclick="openDictionModal(3)">
+                    [全班的加油吶喊非常大聲]
+                </span>，那一刻我知道自己不是孤軍奮戰。
+                運動會結束後，
+                <span class="upgrade-target" id="target4" onclick="openDictionModal(4)">
+                    [我很開心，學到了很多事情]
+                </span>。
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-secondary" onclick="switchCase(2)">返回第二案</button>
+                <button class="btn-detective" id="btnNextCase3" onclick="validateCase3()">
+                    破譯完成 ➔ 前往第四案：微物破綻
+                </button>
+            </div>
+        </main>
+
+        <!-- ==================== CASE 4: 錯字標點 ==================== -->
+        <main class="case-panel" id="case4Panel">
+            <div class="panel-header">
+                <div class="panel-header-left">
+                    <h3>🔬 第四案：微物指紋顯影</h3>
+                    <p>評分標準四：【錯字標點】—— 零錯別字、字音字形精準，標點符號表意恰當、富節奏感。</p>
+                </div>
+                <div class="panel-badge-standard">標準四：錯字標點</div>
+            </div>
+
+            <div class="mission-instruction">
+                🕵️ <strong>偵探任務指示</strong>：嫌犯偽造的結案文件留下了微小指紋！請用放大鏡仔細檢驗手稿，<strong>點擊找出隱藏的 4 處錯別字與 2 處失職標點</strong>（共 6 處破綻）！
+            </div>
+
+            <div class="typo-inspection-box" id="typoInspectionBox">站在起跑線<span class="clickable-error" id="err1" onclick="fixTypo(1, '在', '上')">在</span>，我看見身旁的對手個個<span class="clickable-error" id="err2" onclick="fixTypo(2, '磨', '摩')">磨</span>拳擦掌，眼神中充滿了鬥志<span class="clickable-error" id="err3" onclick="fixTypo(3, '，', '；')">，</span>我感到胸膛裡的心臟怦怦直跳，早已<span class="clickable-error" id="err4" onclick="fixTypo(4, '做', '作')">做</span>好了萬全準備。隨著發令槍響起，耳邊呼嘯的風聲宛如雷鳴<span class="clickable-error" id="err5" onclick="fixTypo(5, '？', '！')">？</span>這場激烈的接力賽，確實讓我獲益<span class="clickable-error" id="err6" onclick="fixTypo(6, '非', '匪')">非</span>淺。</div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                <span style="font-size: 0.95rem; color: var(--gold-bright);">
+                    已破除破綻：<strong id="fixedCountText" style="font-size: 1.25rem;">0</strong> / 6
+                </span>
+                <span style="font-size: 0.85rem; color: var(--muted-text);">
+                    提示：注意常混淆字（在/上、磨/摩、做/作、非/匪）與標點符號（感嘆語氣用驚嘆號、相似句型並列複句中間用分號）。
+                </span>
+            </div>
+
+            <div id="typoClueDetail" class="typo-clue-detail" style="display: none;">
+                <div class="clue-detail-title" id="clueDetailTitle"></div>
+                <div class="clue-detail-desc" id="clueDetailDesc"></div>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-secondary" onclick="switchCase(3)">返回第三案</button>
+                <button class="btn-detective" id="btnNextCase4" onclick="validateCase4()">
+                    修復結案 ➔ 進入最高名偵探審判庭
+                </button>
+            </div>
+        </main>
+
+        <!-- ==================== FINAL: 結案審判庭 ==================== -->
+        <main class="case-panel" id="caseFinal">
+            <div class="certificate-container" id="printableCertificate">
+                <!-- Gold Badge Artwork -->
+                <img src="素材資料/detective_badge.jpg" alt="寫作大偵探徽章" class="cert-badge-img" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=400&q=80';">
+                
+                <h3 class="cert-title">名偵探結案榮譽證書</h3>
+                <p class="cert-subtitle">特此證明該員已成功破解「操場迷蹤案」，掌握作文評分四大向度真諦！</p>
+
+                <div class="student-name-input-group">
+                    <label for="studentNameInput">探員姓名：</label>
+                    <input type="text" id="studentNameInput" value="李大偵探" placeholder="請輸入您的姓名">
+                </div>
+
+                <!-- Radar Score Cards -->
+                <div class="radar-grid">
+                    <div class="score-card">
+                        <div class="score-card-header">
+                            <span class="score-title">一、立意取材</span>
+                            <span class="score-stars">★★★★★ 6級分</span>
+                        </div>
+                        <p>成功打破「摔倒又爬起來」的俗套泥淖，以「從孤軍短跑至群體接力」深化心靈昇華，視野開闊。</p>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-card-header">
+                            <span class="score-title">二、結構組織</span>
+                            <span class="score-stars">★★★★★ 6級分</span>
+                        </div>
+                        <p>起承轉合層次嚴謹，善用六何法（5W1H）鋪排情境、衝突、轉折與深刻感悟，脈絡流暢自然。</p>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-card-header">
+                            <span class="score-title">三、遣詞造句</span>
+                            <span class="score-stars">★★★★★ 6級分</span>
+                        </div>
+                        <p>融入五感摹寫（心臟怦怦直跳、如坐針氈）與精準修辭（如箭般直射終點），文字現場感十足。</p>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-card-header">
+                            <span class="score-title">四、錯字標點</span>
+                            <span class="score-stars">★★★★★ 6級分</span>
+                        </div>
+                        <p>精準辨析易混淆字（摩拳擦掌、獲益匪淺），標點節奏張弛有度，展現高度文字基本功。</p>
+                    </div>
+                </div>
+
+                <!-- Restored Masterpiece -->
+                <div class="restored-essay-box">
+                    <div class="certified-stamp">滿分範本・重鑄結案</div>
+                    <h4>《一次難忘的運動會》（偵探精修重鑄版）</h4>
+                    <p>當蔚藍的晨曦穿透薄霧，操場四周早已彩旗飄揚，歡騰的吶喊聲宣告著一年一度運動會的揭幕。身為選手的我，胸前別著沉甸甸的號碼布，既期待又忐忑不安。</p>
+                    <p>這次運動會，我代表班上參加一百公尺短跑。站在起跑線上時，我的心臟怦怦直跳，緊張得手心冒汗，如坐針氈。隨著槍聲響起，我立刻衝了出去，腳步快得像箭一般直射前方的終點，耳邊是呼嘯的風聲與同學們的加油聲。雙腿雖然發酸，但我仍咬緊牙關，努力向前，直到衝過終點線的那一刻，心中湧起說不出的暢快與激動。</p>
+                    <p>最緊張的比賽是大隊接力。當我接過同學遞來的棒子時，耳邊立刻響起全班齊聲的加油吶喊，如雷貫耳，那聲音比短跑時更震撼！和一百公尺不同，這一次我知道自己不是孤單一人，而是整個班級的心臟在同頻跳動。我的腳步越來越急促，心裡想的不是個人成績，而是如何把棒子安全、快速地交到下一位同學手裡。當我將棒子順利交出時，看見隊友飛快衝刺的背影，我明白了，只要大家一起努力，就能跑出最強的力量。</p>
+                    <p>夕陽西下，運動會結束後，我雖然感到全身疲憊，但心裡卻十分充實。短跑比賽讓我學會挑戰自己，不輕易放棄；接力比賽則讓我體會到合作的重要。這天不僅是一場勝負，更是一段與夥伴同甘共苦的珍貴記憶，令我獲益匪淺、記憶猶新。</p>
+                </div>
+
+                <div class="panel-actions" style="justify-content: center; gap: 16px;">
+                    <button class="btn-detective" onclick="window.print()">
+                        🖨️ 列印 / 儲存名偵探結案筆記
+                    </button>
+                    <button class="btn-secondary" onclick="restartInvestigation()">
+                        🔄 重新調查案件
+                    </button>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Modal for Diction Upgrade Picker -->
+    <div class="detective-modal-overlay" id="dictionModal">
+        <div class="detective-modal">
+            <div class="modal-header">
+                <h4 id="modalTitle">🔍 供詞鍊金術：請選擇升級詞句</h4>
+                <button class="modal-close-btn" onclick="closeDictionModal()">&times;</button>
+            </div>
+            <p id="modalInstruction" style="font-size: 0.92rem; color: #cbd5e1; margin-bottom: 12px;"></p>
+            <div class="modal-choices" id="modalChoicesContainer">
+                <!-- Dynamic Choices -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ======================== STATE MANAGEMENT ======================== */
+        const gameState = {
+            currentCase: 1,
+            completedCases: {
+                case1: false,
+                case2: false,
+                case3: false,
+                case4: false
+            },
+            case1Selected: new Set(),
+            puzzleOrder: [1, 3, 0, 2], // Shuffled initial order
+            puzzleCorrect: [0, 1, 2, 3],
+            dictionUpgrades: {
+                target1: false,
+                target2: false,
+                target3: false,
+                target4: false
+            },
+            fixedTypos: new Set()
+        };
+
+        const puzzleParagraphs = [
+            {
+                id: 0,
+                stage: '【起】',
+                label: '破題揭幕',
+                text: '當蔚藍的晨曦穿透薄霧，操場四周早已彩旗飄揚，歡騰的吶喊聲宣告著運動會的揭幕。身為選手的我，胸前別著沉甸甸的號碼布，既期待又忐忑不安。'
+            },
+            {
+                id: 1,
+                stage: '【承】',
+                label: '個人短跑',
+                text: '代表班上參加一百米短跑。站在起跑線上時，心臟怦怦直跳，如坐針氈。槍聲響起，腳步如箭般直射終點，耳邊是風聲與吶喊，咬牙衝過了終點線！'
+            },
+            {
+                id: 2,
+                stage: '【轉】',
+                label: '接力高潮',
+                text: '最緊張的是大隊接力。接過那根帶著隊友手溫的棒子，耳邊響起齊聲吶喊。那一刻我明白自己不是孤軍奮戰，而是整個班級的心跳在同頻共振！'
+            },
+            {
+                id: 3,
+                stage: '【合】',
+                label: '感悟昇華',
+                text: '夕陽西下，運動會結束後全身疲憊，但內心卻無比充實。短跑學會挑戰自己，接力體會合作凝聚。這段與夥伴同甘共苦的記憶，令人獲益匪淺。'
+            }
+        ];
+
+        const dictionOptions = {
+            1: {
+                title: '替換「站在起跑線上時，我很緊張」',
+                instruction: '原句只用了「我很緊張」，太過單薄。請挑選融合【五感生理與心理摹寫】的選項：',
+                choices: [
+                    {
+                        text: '站在起跑線上時，我的心臟怦怦直跳，緊張得手心冒汗，如坐針氈。',
+                        isCorrect: true,
+                        replaceHtml: '站在起跑線上時，我的心臟怦怦直跳，緊張得手心冒汗，如坐針氈'
+                    },
+                    {
+                        text: '站在起跑線上時，我心裡超級無敵非常緊張。',
+                        isCorrect: false,
+                        feedback: '這只是在副詞上疊加，依然沒有生動的生理細節描寫喔！'
+                    },
+                    {
+                        text: '站在起跑線上時，我很緊張，大家都看著我。',
+                        isCorrect: false,
+                        feedback: '依然停留在概念陳述，缺少緊張的神態與生理反應。'
+                    }
+                ]
+            },
+            2: {
+                title: '替換「我跑得很快」',
+                instruction: '原句「我跑得很快」無法讓讀者身歷其境。請挑選運用【生動譬喻修辭】的選項：',
+                choices: [
+                    {
+                        text: '腳步快得像箭一般直射前方的終點，耳邊是呼嘯的風聲。',
+                        isCorrect: true,
+                        replaceHtml: '腳步快得像箭一般直射前方的終點，耳邊是呼嘯的風聲'
+                    },
+                    {
+                        text: '我用吃奶的力氣以最快的速度拚命跑。',
+                        isCorrect: false,
+                        feedback: '口語化俗套詞彙，缺乏優美的修辭張力。'
+                    },
+                    {
+                        text: '我的雙腿動得很快，超過了身邊的所有人。',
+                        isCorrect: false,
+                        feedback: '描寫平淡，缺少速度感與風馳電掣的畫面。'
+                    }
+                ]
+            },
+            3: {
+                title: '替換「全班的加油吶喊非常大聲」',
+                instruction: '「非常大聲」過於空洞。請選擇融入【摹聲與震撼比喻】的選項：',
+                choices: [
+                    {
+                        text: '全班齊聲的加油吶喊如雷貫耳，比短跑時更加震撼！',
+                        isCorrect: true,
+                        replaceHtml: '全班齊聲的加油吶喊如雷貫耳，比短跑時更加震撼'
+                    },
+                    {
+                        text: '大家的加油聲真的好大聲好大聲，震耳欲聾。',
+                        isCorrect: false,
+                        feedback: '簡單的字詞重複並不能創造高級的聽覺畫面。'
+                    },
+                    {
+                        text: '大家都大聲喊叫為我加油。',
+                        isCorrect: false,
+                        feedback: '詞彙過於平淡，無法襯托接力賽全班凝聚的高潮氣氛。'
+                    }
+                ]
+            },
+            4: {
+                title: '替換「我很開心，學到了很多事情」',
+                instruction: '結尾需達到「意猶未盡、言有盡而意無窮」的昇華。請選擇：',
+                choices: [
+                    {
+                        text: '心中湧起說不出的充實，這段同甘共苦的回憶令人獲益匪淺、記憶猶新。',
+                        isCorrect: true,
+                        replaceHtml: '心中湧起說不出的充實，這段同甘共苦的回憶令人獲益匪淺、記憶猶新'
+                    },
+                    {
+                        text: '我今天開心極了，以後我還要再參加運動會。',
+                        isCorrect: false,
+                        feedback: '小學低年級式的直白結尾，缺少深刻的人生體悟。'
+                    },
+                    {
+                        text: '總之今天很棒，拿第一名很開心，學到了團結。',
+                        isCorrect: false,
+                        feedback: '用「總之」倉促帶過，缺乏深層回味感。'
+                    }
+                ]
+            }
+        };
+
+        /* ======================== NAVIGATION ======================== */
+        function switchCase(caseNum) {
+            document.querySelectorAll('.case-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.case-tab-btn').forEach(b => b.classList.remove('active'));
+
+            gameState.currentCase = caseNum;
+            const targetPanel = caseNum === 5 ? document.getElementById('caseFinal') : document.getElementById(`case${caseNum}Panel`);
+            if (targetPanel) targetPanel.classList.add('active');
+
+            if (caseNum <= 4) {
+                const targetTab = document.getElementById(`tabCase${caseNum}`);
+                if (targetTab) targetTab.classList.add('active');
+            }
+
+            window.scrollTo({ top: 380, behavior: 'smooth' });
+        }
+
+        /* ======================== CASE 1 LOGIC ======================== */
+        function handleClueClick(id, type) {
+            const card = document.getElementById(`clue${id}`);
+            if (type === 'trap') {
+                card.classList.toggle('selected-trap');
+            } else {
+                card.classList.toggle('selected-gem');
+            }
+            gameState.case1Selected.add(id);
+        }
+
+        function validateCase1() {
+            const clue3 = document.getElementById('clue3').classList.contains('selected-gem');
+            const clue4 = document.getElementById('clue4').classList.contains('selected-gem');
+            const clue1 = document.getElementById('clue1').classList.contains('selected-trap');
+            const clue2 = document.getElementById('clue2').classList.contains('selected-trap');
+
+            if (!clue3 && !clue4) {
+                alert('🔍 偵探提示：請點擊至少選出高分的【破案關鍵線索】（線索 C 或 D）！');
+                return;
+            }
+
+            gameState.completedCases.case1 = true;
+            document.getElementById('tabCase1').classList.add('completed');
+            alert('🎉 第一案破解成功！你成功揪出俗套陷阱，並鎖定由個體昇華至團隊的黃金立意！');
+            switchCase(2);
+        }
+
+        /* ======================== CASE 2 PUZZLE LOGIC ======================== */
+        function renderPuzzle() {
+            const container = document.getElementById('timelinePuzzleList');
+            container.innerHTML = '';
+
+            gameState.puzzleOrder.forEach((paraId, index) => {
+                const pData = puzzleParagraphs[paraId];
+                const item = document.createElement('div');
+                item.className = 'puzzle-item';
+                // 挑戰過程中不顯示起承轉合標籤，由探員自行依文意邏輯推理；待第二案過關後再標註
+                const stageTag = gameState.completedCases.case2
+                    ? `<span style="background: rgba(245, 176, 65, 0.2); color: var(--gold-bright); border: 1px solid var(--border-brass); padding: 1px 8px; border-radius: 4px; font-weight: bold; margin-right: 8px; font-size: 0.85rem;">${pData.stage} ${pData.label}</span>`
+                    : '';
+                item.innerHTML = `
+                    <div class="puzzle-handle">${index + 1}</div>
+                    <div class="puzzle-text">
+                        ${stageTag}${pData.text}
+                    </div>
+                    <div class="puzzle-arrows">
+                        <button class="puzzle-btn-move" onclick="movePuzzleItem(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3;"' : ''} aria-label="上移">▲</button>
+                        <button class="puzzle-btn-move" onclick="movePuzzleItem(${index}, 1)" ${index === gameState.puzzleOrder.length - 1 ? 'disabled style="opacity:0.3;"' : ''} aria-label="下移">▼</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function movePuzzleItem(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= gameState.puzzleOrder.length) return;
+
+            const temp = gameState.puzzleOrder[index];
+            gameState.puzzleOrder[index] = gameState.puzzleOrder[newIndex];
+            gameState.puzzleOrder[newIndex] = temp;
+
+            renderPuzzle();
+        }
+
+        function validateCase2() {
+            const isCorrect = gameState.puzzleOrder.every((val, idx) => val === gameState.puzzleCorrect[idx]);
+            if (!isCorrect) {
+                alert('🧩 偵探提示：時間線尚未完全吻合！請檢查是否符合文章開頭揭幕、個人短跑、接力高潮、感悟昇華的先後時序！');
+                return;
+            }
+
+            gameState.completedCases.case2 = true;
+            document.getElementById('tabCase2').classList.add('completed');
+            renderPuzzle(); // 破案後重新渲染，顯示起承轉合確認勳章
+            alert('🎉 第二案破解成功！時空碎片已完美串聯，六何法起承轉合井然有序！');
+            switchCase(3);
+        }
+
+        /* ======================== CASE 3 DICTION LOGIC ======================== */
+        let currentModalTarget = 1;
+
+        function openDictionModal(targetNum) {
+            currentModalTarget = targetNum;
+            const data = dictionOptions[targetNum];
+            document.getElementById('modalTitle').textContent = `🔍 ${data.title}`;
+            document.getElementById('modalInstruction').textContent = data.instruction;
+
+            const container = document.getElementById('modalChoicesContainer');
+            container.innerHTML = '';
+
+            data.choices.forEach((choice, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'modal-choice-btn';
+                btn.innerHTML = `<span>${choice.text}</span> <span style="color:var(--gold-bright);">選取 ➔</span>`;
+                btn.onclick = () => selectDictionChoice(targetNum, choice);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('dictionModal').classList.add('show');
+        }
+
+        function closeDictionModal() {
+            document.getElementById('dictionModal').classList.remove('show');
+        }
+
+        function selectDictionChoice(targetNum, choice) {
+            if (!choice.isCorrect) {
+                alert(`⚠️ 偵探回饋：${choice.feedback}`);
+                return;
+            }
+
+            const targetSpan = document.getElementById(`target${targetNum}`);
+            targetSpan.innerHTML = `【${choice.replaceHtml}】`;
+            targetSpan.classList.add('upgraded');
+            gameState.dictionUpgrades[`target${targetNum}`] = true;
+            closeDictionModal();
+        }
+
+        function validateCase3() {
+            const allUpgraded = Object.values(gameState.dictionUpgrades).every(Boolean);
+            if (!allUpgraded) {
+                alert('🔍 偵探提示：文中尚有未破譯升級的平淡詞句，請點擊所有紅色標註處完成升級！');
+                return;
+            }
+
+            gameState.completedCases.case3 = true;
+            document.getElementById('tabCase3').classList.add('completed');
+            alert('🎉 第三案破解成功！平淡供詞經百寶箱洗練，已轉化為生動華美的五感佳句！');
+            switchCase(4);
+        }
+
+        /* ======================== CASE 4 TYPO LOGIC ======================== */
+        const typoKnowledge = {
+            1: {
+                title: '🔍【字音字形破譯】起跑線「上」',
+                desc: '表示空間位置或處所時，應使用方位詞「線上」，故原手稿寫「起跑線在」語法不通，更正為「站在起跑線上」。'
+            },
+            2: {
+                title: '🔍【字詞成語破譯】「摩」拳擦掌',
+                desc: '「摩」為摩擦、摩挲之意，形容精神振奮、躍躍欲試的生動神態；不可誤寫為研磨或磨損的「磨」。'
+            },
+            3: {
+                title: '🔍【標點符號破譯】相似句型並列複句使用「分號（；）」',
+                desc: '【分號使用關鍵】：前後兩個分句為結構嚴格相似的並列複句（前半句「我看見身旁的對手個個摩拳擦掌，眼神中充滿了鬥志」；後半句「我感到胸膛裡的心臟怦怦直跳，早已作好了萬全準備」），兩分句內部各自已有逗號，分句之間必須使用「分號（；）」區隔！'
+            },
+            4: {
+                title: '🔍【易混字詞破譯】「作」好準備',
+                desc: '「作」多用於心理準備、抽象思維或活動籌備（如：作準備、作息、作文）；「做」則多用於具體手工產物（如：做工、做菜）。此處準備比賽應寫為「作好準備」。'
+            },
+            5: {
+                title: '🔍【標點符號破譯】強烈聽覺摹寫感嘆句使用「驚嘆號（！）」',
+                desc: '「耳邊呼嘯的風聲宛如雷鳴！」為強烈感官摹寫與讚嘆之感嘆句，並無疑問之意，嫌犯誤植「？」有失文意，應更正為充滿力量的「！」。'
+            },
+            6: {
+                title: '🔍【成語字形破譯】獲益「匪」淺',
+                desc: '「匪」在文言中為否定詞，意為「非、不」；「匪淺」即「不淺」，指收穫極大。成語固定為「獲益匪淺」，不可誤寫為是非的「非」。'
+            }
+        };
+
+        function fixTypo(id, wrongChar, rightChar) {
+            const el = document.getElementById(`err${id}`);
+            if (el.classList.contains('fixed')) return;
+
+            el.textContent = rightChar;
+            el.classList.add('fixed');
+            gameState.fixedTypos.add(id);
+
+            document.getElementById('fixedCountText').textContent = gameState.fixedTypos.size;
+
+            // 即時展示教育解析卡片
+            const detailBox = document.getElementById('typoClueDetail');
+            const detailTitle = document.getElementById('clueDetailTitle');
+            const detailDesc = document.getElementById('clueDetailDesc');
+            if (detailBox && typoKnowledge[id]) {
+                detailBox.style.display = 'block';
+                detailTitle.textContent = typoKnowledge[id].title;
+                detailDesc.textContent = typoKnowledge[id].desc;
+            }
+
+            if (gameState.fixedTypos.size === 6) {
+                setTimeout(() => {
+                    alert('🎯 太神了！所有 4 處錯別字與 2 處失職標點（含並列分句之分號）已全數破譯並修正！');
+                }, 300);
+            }
+        }
+
+        function validateCase4() {
+            if (gameState.fixedTypos.size < 6) {
+                alert(`🔍 偵探提示：尚有 ${6 - gameState.fixedTypos.size} 處微物指紋未被修復，請點擊有問題的字音字形與標點！`);
+                return;
+            }
+
+            gameState.completedCases.case4 = true;
+            document.getElementById('tabCase4').classList.add('completed');
+            document.getElementById('playerRankText').textContent = '特級名偵探・破案結案';
+            switchCase(5);
+        }
+
+        function restartInvestigation() {
+            if (confirm('確定要重新開始調查案件嗎？')) {
+                location.reload();
+            }
+        }
+
+        /* ======================== CANVAS PARTICLES ======================== */
+        const canvas = document.getElementById('ambientCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class DustParticle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = Math.random() * 0.4 + 0.1;
+                this.opacity = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y > canvas.height || this.x < 0 || this.x > canvas.width) {
+                    this.reset();
+                    this.y = 0;
+                }
+            }
+            draw() {
+                ctx.fillStyle = `rgba(245, 176, 65, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            resizeCanvas();
+            particles = [];
+            for (let i = 0; i < 45; i++) {
+                particles.push(new DustParticle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        /* ======================== INITIALIZATION ======================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            animateParticles();
+            renderPuzzle();
+        });
+    </script>
+</body>
+</html>
